@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secret Gardens Salon — Solvang, CA</title>
+  <meta name="description" content="Secret Gardens is a full-service salon in the heart of Solvang, California. Hair, color, nails, skincare, and more — lovingly run by family." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Tokens ── */
+    :root {
+      --cream:    #faf6f0;
+      --warm:     #f2ebe0;
+      --sage:     #7d9b76;
+      --sage-dk:  #556b50;
+      --rose:     #c9967a;
+      --rose-lt:  #e8c4b0;
+      --bark:     #3b2e28;
+      --mist:     #b8c9b4;
+      --text:     #3b2e28;
+      --text-lt:  #7a6a62;
+
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'Jost', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Decorative SVG helpers ── */
+    .leaf-divider { display: block; margin: 0 auto; opacity: .35; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: rgba(250,246,240,.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(125,155,118,.18);
+      transition: box-shadow .3s;
+    }
+    nav.scrolled { box-shadow: 0 2px 24px rgba(59,46,40,.08); }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 400;
+      letter-spacing: .04em;
+      color: var(--bark);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--sage); font-style: italic; }
+
+    .nav-links {
+      display: flex; gap: 2.4rem; list-style: none;
+    }
+    .nav-links a {
+      font-size: .78rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--text-lt);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--sage-dk); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 110%, rgba(125,155,118,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 20% 20%, rgba(201,150,122,.10) 0%, transparent 60%),
+        var(--cream);
+    }
+
+    /* Floating botanical blobs */
+    .hero-blob {
+      position: absolute;
+      opacity: .13;
+      pointer-events: none;
+    }
+    .hero-blob-1 { top: 6%; left: 2%; width: 340px; transform: rotate(-15deg); }
+    .hero-blob-2 { bottom: 4%; right: 2%; width: 300px; transform: rotate(20deg) scaleX(-1); }
+    .hero-blob-3 { top: 40%; left: -3%; width: 200px; transform: rotate(5deg); }
+    .hero-blob-4 { top: 15%; right: 4%; width: 240px; transform: rotate(-8deg); }
+
+    .hero-eyebrow {
+      font-size: .72rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      animation: fadeUp .9s ease .2s forwards;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3.8rem, 9vw, 8rem);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: .01em;
+      color: var(--bark);
+      opacity: 0;
+      animation: fadeUp .9s ease .4s forwards;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--sage-dk);
+    }
+
+    .hero-sub {
+      margin-top: 1.6rem;
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+      font-style: italic;
+      color: var(--text-lt);
+      opacity: 0;
+      animation: fadeUp .9s ease .6s forwards;
+    }
+
+    .hero-location {
+      margin-top: .7rem;
+      font-size: .75rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--rose);
+      opacity: 0;
+      animation: fadeUp .9s ease .75s forwards;
+    }
+
+    .hero-cta {
+      margin-top: 3rem;
+      opacity: 0;
+      animation: fadeUp .9s ease .9s forwards;
+      display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: center;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: .85rem 2.4rem;
+      font-family: var(--font-body);
+      font-size: .75rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: all .25s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--sage);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--sage-dk); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(85,107,80,.25); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--bark);
+      border: 1px solid rgba(59,46,40,.3);
+    }
+    .btn-outline:hover { border-color: var(--sage); color: var(--sage-dk); }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 6rem 2rem; }
+
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-inner.narrow { max-width: 720px; }
+
+    .section-label {
+      font-size: .7rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--sage);
+      display: block;
+      margin-bottom: .9rem;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.12;
+      color: var(--bark);
+    }
+    h2 em { font-style: italic; color: var(--sage-dk); }
+
+    p { color: var(--text-lt); font-size: .98rem; }
+
+    /* ── DIVIDER LINE ── */
+    .divider {
+      width: 48px; height: 1px;
+      background: var(--rose-lt);
+      margin: 1.8rem 0;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--warm); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .about-text p + p { margin-top: 1.1rem; }
+
+    .about-portrait {
+      position: relative;
+    }
+    .portrait-frame {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background:
+        linear-gradient(135deg, var(--mist) 0%, var(--rose-lt) 100%);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .portrait-frame::before {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(255,255,255,.5);
+      border-radius: 1px;
+      pointer-events: none;
+    }
+    .portrait-placeholder {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1rem;
+      color: rgba(59,46,40,.45);
+      text-align: center;
+      padding: 2rem;
+    }
+    .portrait-accent {
+      position: absolute;
+      bottom: -16px; right: -16px;
+      width: 80px; height: 80px;
+      border: 2px solid var(--rose-lt);
+      border-radius: 2px;
+    }
+
+    /* ── SERVICES ── */
+    #services { background: var(--cream); }
+
+    .services-intro {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .services-intro .divider { margin: 1.4rem auto; }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5px;
+      background: rgba(125,155,118,.15);
+      border: 1.5px solid rgba(125,155,118,.15);
+    }
+
+    .service-card {
+      background: var(--cream);
+      padding: 2.4rem 2rem;
+      transition: background .2s;
+    }
+    .service-card:hover { background: var(--warm); }
+
+    .service-icon {
+      width: 36px; height: 36px;
+      margin-bottom: 1rem;
+      opacity: .6;
+    }
+    .service-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--bark);
+      margin-bottom: .5rem;
+    }
+    .service-card p { font-size: .87rem; line-height: 1.65; }
+
+    /* ── VISIT / INFO ── */
+    #visit {
+      background:
+        linear-gradient(160deg, var(--sage-dk) 0%, #3d5438 100%);
+      color: #fff;
+    }
+    #visit .section-label { color: var(--mist); }
+    #visit h2 { color: #fff; }
+    #visit h2 em { color: var(--rose-lt); }
+
+    .visit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+      margin-top: 3rem;
+    }
+
+    .info-block { margin-bottom: 2.5rem; }
+    .info-block h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: .04em;
+      color: var(--rose-lt);
+      margin-bottom: .6rem;
+    }
+    .info-block p, .info-block address {
+      font-style: normal;
+      color: rgba(255,255,255,.75);
+      font-size: .93rem;
+      line-height: 1.85;
+    }
+
+    .hours-table { width: 100%; border-collapse: collapse; }
+    .hours-table td {
+      padding: .3rem 0;
+      font-size: .9rem;
+      color: rgba(255,255,255,.75);
+    }
+    .hours-table td:first-child { color: rgba(255,255,255,.5); width: 55%; }
+
+    .map-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: .95rem;
+      color: rgba(255,255,255,.4);
+      flex-direction: column;
+      gap: .6rem;
+    }
+
+    /* ── EMAIL SIGNUP ── */
+    #signup {
+      background: var(--warm);
+      text-align: center;
+    }
+    #signup .section-inner { max-width: 600px; }
+    #signup .divider { margin: 1.4rem auto; }
+    #signup p { margin-bottom: 2.2rem; }
+
+    .signup-form {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .signup-form input[type="email"],
+    .signup-form input[type="text"] {
+      flex: 1;
+      min-width: 200px;
+      padding: .85rem 1.2rem;
+      border: 1px solid rgba(125,155,118,.35);
+      border-radius: 2px;
+      background: #fff;
+      font-family: var(--font-body);
+      font-size: .9rem;
+      color: var(--bark);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .signup-form input:focus { border-color: var(--sage); }
+
+    .form-row {
+      display: flex; gap: .75rem; width: 100%; flex-wrap: wrap;
+    }
+    .form-row input { flex: 1; min-width: 160px; }
+
+    .signup-form button {
+      padding: .85rem 2rem;
+      font-size: .75rem;
+    }
+
+    .form-note {
+      margin-top: 1rem;
+      font-size: .78rem;
+      color: var(--text-lt);
+      opacity: .7;
+    }
+
+    .form-success {
+      display: none;
+      padding: 1.2rem 2rem;
+      background: rgba(125,155,118,.12);
+      border: 1px solid var(--sage);
+      border-radius: 2px;
+      color: var(--sage-dk);
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bark);
+      color: rgba(255,255,255,.45);
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 300;
+      color: rgba(255,255,255,.7);
+      font-style: italic;
+      display: block;
+      margin-bottom: .6rem;
+    }
+    footer p { font-size: .78rem; line-height: 2; }
+    footer a { color: var(--mist); text-decoration: none; }
+    footer a:hover { color: var(--rose-lt); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .75s ease, transform .75s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.4rem; }
+      .nav-links { display: none; }
+
+      .about-grid,
+      .visit-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+
+      .about-portrait { order: -1; }
+      .portrait-frame { aspect-ratio: 4/3; }
+
+      section { padding: 4rem 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="main-nav">
+  <a href="#hero" class="nav-logo">Secret <span>Gardens</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">Our Story</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#visit">Visit Us</a></li>
+    <li><a href="#signup">Stay in Touch</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+
+  <!-- Botanical SVG decorations -->
+  <svg class="hero-blob hero-blob-1" viewBox="0 0 320 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M160 380 Q80 300 60 200 Q40 100 120 40 Q200 -20 240 80 Q280 180 220 280 Q180 340 160 380Z" fill="#7d9b76"/>
+    <path d="M160 380 L160 40" stroke="#556b50" stroke-width="1.5" opacity=".4"/>
+    <path d="M160 200 Q100 160 80 120" stroke="#556b50" stroke-width="1" opacity=".3"/>
+    <path d="M160 240 Q220 200 240 160" stroke="#556b50" stroke-width="1" opacity=".3"/>
+    <path d="M160 160 Q110 130 90 100" stroke="#556b50" stroke-width="1" opacity=".3"/>
+    <path d="M160 300 Q200 270 210 240" stroke="#556b50" stroke-width="1" opacity=".3"/>
+  </svg>
+
+  <svg class="hero-blob hero-blob-2" viewBox="0 0 320 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M160 380 Q80 300 60 200 Q40 100 120 40 Q200 -20 240 80 Q280 180 220 280 Q180 340 160 380Z" fill="#c9967a"/>
+    <path d="M160 380 L160 40" stroke="#a07060" stroke-width="1.5" opacity=".4"/>
+    <path d="M160 200 Q100 160 80 120" stroke="#a07060" stroke-width="1" opacity=".3"/>
+    <path d="M160 240 Q220 200 240 160" stroke="#a07060" stroke-width="1" opacity=".3"/>
+  </svg>
+
+  <svg class="hero-blob hero-blob-3" viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="130" rx="60" ry="100" fill="#b8c9b4"/>
+    <line x1="100" y1="20" x2="100" y2="240" stroke="#7d9b76" stroke-width="1"/>
+    <path d="M100 100 Q60 80 50 60" stroke="#7d9b76" stroke-width="1" opacity=".5"/>
+    <path d="M100 140 Q140 120 150 100" stroke="#7d9b76" stroke-width="1" opacity=".5"/>
+  </svg>
+
+  <svg class="hero-blob hero-blob-4" viewBox="0 0 240 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M120 270 Q50 210 40 140 Q30 70 100 30 Q170 -10 200 60 Q230 130 180 200 Q155 240 120 270Z" fill="#b8c9b4"/>
+  </svg>
+
+  <p class="hero-eyebrow">Full Service Salon · Solvang, California</p>
+  <h1>Secret<br/><em>Gardens</em></h1>
+  <p class="hero-sub">Where beauty blooms in the heart of a Danish village</p>
+  <p class="hero-location">&#9670; Copenhagen Drive, Solvang, CA &#9670;</p>
+
+  <div class="hero-cta">
+    <a href="#services" class="btn btn-primary">Explore Services</a>
+    <a href="#visit" class="btn btn-outline">Find Us</a>
+  </div>
+
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+
+      <div class="about-text reveal">
+        <span class="section-label">Our Story</span>
+        <h2>A garden<br/><em>tended by family</em></h2>
+        <div class="divider"></div>
+        <p>
+          Secret Gardens is more than a salon — it's a family legacy rooted in care, craft, and community. Nestled in the charming Danish village of Solvang, our doors have always been open with warmth and a personal touch that only family can offer.
+        </p>
+        <p>
+          Our grandmother brought the vision. Our mother built upon it. Together, they have cultivated a space where every guest is treated like a dear friend — where you can sit down, breathe, and leave feeling truly cared for.
+        </p>
+        <p>
+          From precision cuts to color artistry, nails, and skincare, every service we offer is delivered with the love and expertise that only comes from years of passion for this craft.
+        </p>
+      </div>
+
+      <div class="about-portrait reveal">
+        <div class="portrait-frame">
+          <!-- Replace with an actual <img> of the salon or the family -->
+          <p class="portrait-placeholder">Add a photo of the salon<br/>or the family here</p>
+        </div>
+        <div class="portrait-accent"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <div class="section-inner">
+
+    <div class="services-intro reveal">
+      <span class="section-label">What We Offer</span>
+      <h2>Full Service, <em>Full Heart</em></h2>
+      <div class="divider"></div>
+      <p style="max-width:520px; margin:0 auto;">Every treatment is tailored to you — no rush, no compromise. Just beautiful results and genuine care.</p>
+    </div>
+
+    <div class="services-grid">
+
+      <div class="service-card reveal">
+        <!-- Scissors icon -->
+        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="26" r="5" stroke="#7d9b76" stroke-width="1.4"/>
+          <circle cx="10" cy="10" r="5" stroke="#7d9b76" stroke-width="1.4"/>
+          <line x1="14.2" y1="23.8" x2="30" y2="8" stroke="#7d9b76" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="14.2" y1="12.2" x2="30" y2="28" stroke="#7d9b76" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <h3>Haircuts &amp; Styling</h3>
+        <p>Precision cuts for all lengths, textures, and styles. Blowouts, curls, and everything in between.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <!-- Color swatch icon -->
+        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 28 Q8 10 18 6 Q28 10 28 28 Q23 32 18 32 Q13 32 8 28Z" stroke="#c9967a" stroke-width="1.4" fill="none"/>
+          <path d="M8 28 Q13 24 18 26 Q23 24 28 28" stroke="#c9967a" stroke-width="1" opacity=".5"/>
+        </svg>
+        <h3>Color &amp; Highlights</h3>
+        <p>From rich all-over color to sun-kissed highlights and dimensional toning, we blend artistry with care.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <!-- Wave icon -->
+        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 22 Q9 12 14 18 Q19 24 24 14 Q29 4 32 14" stroke="#7d9b76" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          <path d="M4 28 Q9 18 14 24 Q19 30 24 20 Q29 10 32 20" stroke="#b8c9b4" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </svg>
+        <h3>Balayage &amp; Ombré</h3>
+        <p>Hand-painted color for natural, effortless-looking dimension that grows out beautifully.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <!-- Nail icon -->
+        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="4" width="16" height="22" rx="8" stroke="#c9967a" stroke-width="1.4"/>
+          <line x1="18" y1="26" x2="18" y2="32" stroke="#c9967a" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="13" y1="32" x2="23" y2="32" stroke="#c9967a" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <h3>Nails &amp; Manicures</h3>
+        <p>Manicures, pedicures, gel, and nail art. Hands and feet pampered to perfection.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <!-- Leaf/spa icon -->
+        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 32 Q6 24 6 14 Q6 4 18 4 Q30 4 30 14 Q30 24 18 32Z" stroke="#7d9b76" stroke-width="1.4" fill="none"/>
+          <line x1="18" y1="32" x2="18" y2="10" stroke="#7d9b76" stroke-width="1" opacity=".5"/>
+          <path d="M18 20 Q12 16 10 12" stroke="#7d9b76" stroke-width="1" opacity=".4"/>
+          <path d="M18 16 Q24 13 26 10" stroke="#7d9b76" stroke-width="1" opacity=".4"/>
+        </svg>
+        <h3>Facials &amp; Skincare</h3>
+        <p>Rejuvenating facials and skincare treatments tailored to your skin's unique needs.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <!-- Star/occasion icon -->
+        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 4 L21 14 L32 14 L23 20 L26 30 L18 24 L10 30 L13 20 L4 14 L15 14 Z" stroke="#c9967a" stroke-width="1.3" fill="none"/>
+        </svg>
+        <h3>Special Occasions</h3>
+        <p>Updos, bridal styling, and event-ready looks. We'll make your most important moments unforgettable.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <!-- Wax/smooth icon -->
+        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="12" width="24" height="14" rx="3" stroke="#7d9b76" stroke-width="1.4"/>
+          <path d="M10 12 Q10 6 18 6 Q26 6 26 12" stroke="#7d9b76" stroke-width="1.2"/>
+        </svg>
+        <h3>Waxing</h3>
+        <p>Smooth, precise waxing services performed with care and attention to your comfort.</p>
+      </div>
+
+      <div class="service-card reveal">
+        <!-- Curl/perm icon -->
+        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 8 Q8 18 18 18 Q28 18 28 28" stroke="#b8c9b4" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          <circle cx="18" cy="18" r="5" stroke="#7d9b76" stroke-width="1.3" fill="none"/>
+        </svg>
+        <h3>Perms &amp; Texture</h3>
+        <p>Body waves, curls, and texture services to transform and revitalize your hair.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── VISIT ── -->
+<section id="visit">
+  <div class="section-inner">
+    <span class="section-label">Come See Us</span>
+    <h2>Find Us in <em>Solvang</em></h2>
+
+    <div class="visit-grid">
+      <div class="reveal">
+
+        <div class="info-block">
+          <h4>Location</h4>
+          <address>
+            Secret Gardens Salon<br/>
+            [Street Address]<br/>
+            Solvang, CA 93463
+          </address>
+        </div>
+
+        <div class="info-block">
+          <h4>Hours</h4>
+          <table class="hours-table">
+            <tr><td>Tuesday – Friday</td><td>9:00 am – 6:00 pm</td></tr>
+            <tr><td>Saturday</td><td>9:00 am – 5:00 pm</td></tr>
+            <tr><td>Sunday</td><td>By Appointment</td></tr>
+            <tr><td>Monday</td><td>Closed</td></tr>
+          </table>
+        </div>
+
+        <div class="info-block">
+          <h4>Contact</h4>
+          <p>
+            <a href="tel:+18055551234" style="color:rgba(255,255,255,.75); text-decoration:none;">(805) 555-1234</a><br/>
+            <a href="mailto:hello@secretgardenssalon.com" style="color:rgba(255,255,255,.75); text-decoration:none;">hello@secretgardenssalon.com</a>
+          </p>
+        </div>
+
+      </div>
+
+      <div class="reveal">
+        <!-- Replace this block with a real Google Maps embed -->
+        <div class="map-placeholder">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="18" r="8" stroke="rgba(255,255,255,.3)" stroke-width="1.4"/><path d="M20 26 Q20 36 20 36" stroke="rgba(255,255,255,.3)" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <span>Embed Google Map here</span>
+          <a href="https://maps.google.com/?q=Solvang,CA" target="_blank" style="color:var(--mist); font-family:var(--font-body); font-size:.72rem; letter-spacing:.1em;">Open in Maps ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EMAIL SIGNUP ── -->
+<section id="signup">
+  <div class="section-inner reveal">
+    <span class="section-label">Stay Connected</span>
+    <h2><em>Join</em> Our Garden</h2>
+    <div class="divider"></div>
+    <p>Be the first to hear about seasonal promotions, new services, and salon news.<br/>We'll never clutter your inbox — just the good stuff.</p>
+
+    <!--
+      EMAIL FORM SETUP:
+      This form uses Formspree (https://formspree.io) — free for up to 50 submissions/month.
+      Steps:
+        1. Create a free account at formspree.io
+        2. Create a new form and copy your form ID (looks like: xpwzgkab)
+        3. Replace "YOUR_FORM_ID" below with your actual form ID
+      That's it! Submissions go straight to your email inbox.
+    -->
+    <form
+      class="signup-form"
+      id="email-form"
+      action="https://formspree.io/f/YOUR_FORM_ID"
+      method="POST"
+    >
+      <div class="form-row">
+        <input type="text"  name="name"  placeholder="Your Name"         required />
+        <input type="email" name="email" placeholder="Your Email Address" required />
+      </div>
+      <button type="submit" class="btn btn-primary">Subscribe</button>
+    </form>
+
+    <div class="form-success" id="form-success">
+      Thank you — you're now part of our garden. ✿
+    </div>
+
+    <p class="form-note">We respect your privacy. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-logo">Secret Gardens</span>
+  <p>
+    Full Service Salon &nbsp;·&nbsp; Solvang, California<br/>
+    <a href="tel:+18055551234">(805) 555-1234</a>
+    &nbsp;·&nbsp;
+    <a href="mailto:hello@secretgardenssalon.com">hello@secretgardenssalon.com</a>
+  </p>
+  <p style="margin-top:1.6rem; font-size:.7rem; opacity:.4;">
+    &copy; <span id="year"></span> Secret Gardens Salon. All rights reserved.
+  </p>
+</footer>
+
+<script>
+  // ── Year ──
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ── Nav shadow on scroll ──
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // ── Reveal on scroll ──
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        // Stagger siblings
+        const siblings = [...e.target.parentElement.querySelectorAll('.reveal')];
+        const delay = siblings.indexOf(e.target) * 100;
+        setTimeout(() => e.target.classList.add('visible'), delay);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // ── Form submit (Formspree AJAX) ──
+  const form = document.getElementById('email-form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        form.style.display = 'none';
+        document.getElementById('form-success').style.display = 'block';
+      } else {
+        btn.textContent = 'Try Again';
+        btn.disabled = false;
+      }
+    } catch {
+      btn.textContent = 'Try Again';
+      btn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>
