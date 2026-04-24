@@ -258,6 +258,15 @@
       text-align: center;
       padding: 2rem;
     }
+
+    /* ── Responsive portrait image ── */
+    .portrait-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;       /* fills the frame, crops edges — never stretches */
+      object-position: center top; /* bias crop toward the top (faces/subjects) */
+      display: block;
+    }
     .portrait-accent {
       position: absolute;
       bottom: -16px; right: -16px;
@@ -552,8 +561,7 @@
 
       <div class="about-portrait reveal">
         <div class="portrait-frame">
-          <!-- Replace with an actual <img> of the salon or the family -->
-          <p class="img"> <img src="images/vertical-scissors.jpg" alt="Photo of the salon"> </p>
+          <img src="images/vertical-scissors.jpg" alt="Photo of the salon" />
         </div>
         <div class="portrait-accent"></div>
       </div>
