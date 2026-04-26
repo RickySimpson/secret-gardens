@@ -475,24 +475,35 @@
       letter-spacing: .04em !important;
     }
 
-    /* Text & email inputs */
-    .eo-form-wrap input[type="text"],
-    .eo-form-wrap input[type="email"] {
+    /* All inputs inside EO form — cast wide net to catch every field type */
+    .eo-form-wrap input {
       width: 100% !important;
       padding: 1rem 1.3rem !important;
       border: 1px solid rgba(125,155,118,.4) !important;
       border-radius: 2px !important;
-      background: #fff !important;
+      background: #ffffff !important;
+      background-color: #ffffff !important;
       font-family: var(--font-body) !important;
       font-size: 1.05rem !important;
       color: var(--bark) !important;
       box-shadow: none !important;
       margin-bottom: .75rem !important;
+      -webkit-appearance: none !important;
+      appearance: none !important;
     }
-    .eo-form-wrap input[type="text"]:focus,
-    .eo-form-wrap input[type="email"]:focus {
+    .eo-form-wrap input:focus {
       outline: none !important;
       border-color: var(--sage) !important;
+      background: #ffffff !important;
+    }
+    /* Override any inherited warm/cream background from parent sections */
+    .eo-form-wrap * {
+      background-color: transparent !important;
+    }
+    .eo-form-wrap input,
+    .eo-form-wrap input[type="text"],
+    .eo-form-wrap input[type="email"] {
+      background-color: #ffffff !important;
     }
 
     /* Submit button */
@@ -541,23 +552,39 @@
 
     /* ── FOOTER ── */
     footer {
-      background: var(--bark);
-      color: rgba(255,255,255,.45);
+      background: var(--sage-dk);
+      color: rgba(255,255,255,.75);
       text-align: center;
-      padding: 3rem 2rem;
+      padding: 3.5rem 2rem;
+      border-top: 3px solid var(--sage);
     }
     .footer-logo {
       font-family: var(--font-display);
-      font-size: 1.9rem;
+      font-size: 2.1rem;
       font-weight: 400;
-      color: rgba(255,255,255,.75);
+      color: #ffffff;
       font-style: italic;
       display: block;
-      margin-bottom: .6rem;
+      margin-bottom: .8rem;
+      letter-spacing: .02em;
     }
-    footer p { font-size: .95rem; line-height: 2.1; }
-    footer a { color: var(--mist); text-decoration: none; }
-    footer a:hover { color: var(--rose-lt); }
+    footer p {
+      font-size: 1rem;
+      line-height: 2.2;
+      color: rgba(255,255,255,.85);
+    }
+    footer a {
+      color: var(--rose-lt);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    footer a:hover { color: #fff; }
+    .footer-copy {
+      margin-top: 1.8rem;
+      font-size: .82rem !important;
+      color: rgba(255,255,255,.45) !important;
+    }
 
     /* ── ANIMATIONS ── */
     @keyframes fadeUp {
@@ -859,7 +886,7 @@
     &nbsp;·&nbsp;
     <a href="mailto:secret.gardens@yahoo.com">secret.gardens@yahoo.com</a>
   </p>
-  <p style="margin-top:1.6rem; font-size:.7rem; opacity:.4;">
+  <p class="footer-copy">
     &copy; <span id="year"></span> Secret Gardens Salon. All rights reserved.
   </p>
 </footer>
