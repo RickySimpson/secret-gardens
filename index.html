@@ -451,6 +451,94 @@
       margin-top: .5rem;
     }
 
+    /* ── EmailOctopus embed overrides ── */
+    .eo-form-wrap {
+      max-width: 560px;
+      margin: 0 auto 1rem;
+    }
+
+    /* Wrapper injected by EO */
+    .eo-form-wrap [class*="email-octopus"] {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      font-family: var(--font-body) !important;
+    }
+
+    /* Labels */
+    .eo-form-wrap label {
+      font-family: var(--font-body) !important;
+      font-size: 1rem !important;
+      color: var(--text-lt) !important;
+      font-weight: 500 !important;
+      letter-spacing: .04em !important;
+    }
+
+    /* Text & email inputs */
+    .eo-form-wrap input[type="text"],
+    .eo-form-wrap input[type="email"] {
+      width: 100% !important;
+      padding: 1rem 1.3rem !important;
+      border: 1px solid rgba(125,155,118,.4) !important;
+      border-radius: 2px !important;
+      background: #fff !important;
+      font-family: var(--font-body) !important;
+      font-size: 1.05rem !important;
+      color: var(--bark) !important;
+      box-shadow: none !important;
+      margin-bottom: .75rem !important;
+    }
+    .eo-form-wrap input[type="text"]:focus,
+    .eo-form-wrap input[type="email"]:focus {
+      outline: none !important;
+      border-color: var(--sage) !important;
+    }
+
+    /* Submit button */
+    .eo-form-wrap input[type="submit"],
+    .eo-form-wrap button[type="submit"] {
+      background: var(--sage) !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 2px !important;
+      padding: 1rem 2.6rem !important;
+      font-family: var(--font-body) !important;
+      font-size: .9rem !important;
+      font-weight: 500 !important;
+      letter-spacing: .12em !important;
+      text-transform: uppercase !important;
+      cursor: pointer !important;
+      transition: background .25s, transform .25s !important;
+      box-shadow: none !important;
+      width: auto !important;
+    }
+    .eo-form-wrap input[type="submit"]:hover,
+    .eo-form-wrap button[type="submit"]:hover {
+      background: var(--sage-dk) !important;
+      transform: translateY(-2px) !important;
+    }
+
+    /* Success / error messages from EO */
+    .eo-form-wrap [class*="success"],
+    .eo-form-wrap [class*="error"] {
+      font-family: var(--font-display) !important;
+      font-style: italic !important;
+      font-size: 1.1rem !important;
+      border-radius: 2px !important;
+      padding: 1.1rem 1.5rem !important;
+    }
+    .eo-form-wrap [class*="success"] {
+      background: rgba(125,155,118,.12) !important;
+      color: var(--sage-dk) !important;
+      border: 1px solid var(--sage) !important;
+    }
+    .eo-form-wrap [class*="error"] {
+      background: rgba(201,150,122,.12) !important;
+      color: #8b4a30 !important;
+      border: 1px solid var(--rose) !important;
+    }
+
     /* ── FOOTER ── */
     footer {
       background: var(--bark);
@@ -753,20 +841,9 @@
     <div class="divider"></div>
     <p>Be the first to hear about seasonal promotions, new services, and salon news.<br/>We'll never clutter your inbox — just the good stuff.</p>
 
-    <form class="signup-form" id="email-form" onsubmit="return false;">
-      <div class="form-row">
-        <input type="text"  id="sg-name"  placeholder="Your Name"         required autocomplete="given-name" />
-        <input type="email" id="sg-email" placeholder="Your Email Address" required autocomplete="email" />
-      </div>
-      <button type="button" class="btn btn-primary" id="sg-submit">Subscribe</button>
-    </form>
-
-    <div class="form-success" id="form-success">
-      Thank you — you're now part of our garden. ✿
-    </div>
-
-    <div class="form-error" id="form-error">
-      Something went wrong. Please try again or email us directly.
+    <!-- EmailOctopus embedded form -->
+    <div class="eo-form-wrap">
+      <script async src="https://eocampaign1.com/form/a9dc5378-4115-11f1-88b1-03e32652ea5b.js" data-form="a9dc5378-4115-11f1-88b1-03e32652ea5b"></script>
     </div>
 
     <p class="form-note">We respect your privacy. Unsubscribe anytime.</p>
@@ -811,75 +888,7 @@
   }, { threshold: 0.12 });
   revealEls.forEach(el => observer.observe(el));
 
-  // ── EmailOctopus Subscription ──
-  // SETUP: Replace the two values below with your own from EmailOctopus.
-  //   API Key  → emailoctopus.com → Account → API
-  //   List ID  → emailoctopus.com → Lists → click your list → copy the ID from the URL
-  const EO_API_KEY = 'eo_046745c731511caea9b008f882997144f756e5eb6e3c724240632f7cf594c6fe';
-  const EO_LIST_ID = '40b3bb56-410c-11f1-b617-0d2682659c97';
-
-  document.getElementById('sg-submit').addEventListener('click', async () => {
-    const nameVal  = document.getElementById('sg-name').value.trim();
-    const emailVal = document.getElementById('sg-email').value.trim();
-
-    // Basic validation
-    if (!nameVal || !emailVal) {
-      document.getElementById('sg-name').reportValidity();
-      document.getElementById('sg-email').reportValidity();
-      return;
-    }
-
-    const btn = document.getElementById('sg-submit');
-    const formEl = document.getElementById('email-form');
-    const successEl = document.getElementById('form-success');
-    const errorEl = document.getElementById('form-error');
-
-    btn.textContent = 'Sending…';
-    btn.disabled = true;
-    errorEl.style.display = 'none';
-
-    // Split name into first / last (last is optional)
-    const parts = nameVal.split(' ');
-    const firstName = parts[0];
-    const lastName  = parts.slice(1).join(' ') || '';
-
-    try {
-      const res = await fetch(
-        `https://emailoctopus.com/api/1.6/lists/${EO_LIST_ID}/contacts`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            api_key:       EO_API_KEY,
-            email_address: emailVal,
-            fields: {
-              FirstName: firstName,
-              LastName:  lastName
-            },
-            status: 'SUBSCRIBED'
-          })
-        }
-      );
-
-      const data = await res.json();
-
-      // EmailOctopus returns 200 on success; 409 means already subscribed (still friendly)
-      if (res.ok || res.status === 409) {
-        formEl.style.display = 'none';
-        successEl.style.display = 'block';
-      } else {
-        console.error('EmailOctopus error:', data);
-        btn.textContent = 'Subscribe';
-        btn.disabled = false;
-        errorEl.style.display = 'block';
-      }
-    } catch (err) {
-      console.error('Network error:', err);
-      btn.textContent = 'Subscribe';
-      btn.disabled = false;
-      errorEl.style.display = 'block';
-    }
-  });
+  // EmailOctopus form is handled by the embedded script above.
 </script>
 
 </body>
