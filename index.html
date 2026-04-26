@@ -437,7 +437,18 @@
       color: var(--sage-dk);
       font-family: var(--font-display);
       font-style: italic;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
+    }
+
+    .form-error {
+      display: none;
+      padding: 1rem 2rem;
+      background: rgba(201,150,122,.12);
+      border: 1px solid var(--rose);
+      border-radius: 2px;
+      color: #8b4a30;
+      font-size: 1rem;
+      margin-top: .5rem;
     }
 
     /* ── FOOTER ── */
@@ -742,30 +753,20 @@
     <div class="divider"></div>
     <p>Be the first to hear about seasonal promotions, new services, and salon news.<br/>We'll never clutter your inbox — just the good stuff.</p>
 
-    <!--
-      EMAIL FORM SETUP:
-      This form uses Formspree (https://formspree.io) — free for up to 50 submissions/month.
-      Steps:
-        1. Create a free account at formspree.io
-        2. Create a new form and copy your form ID (looks like: xpwzgkab)
-        3. Replace "YOUR_FORM_ID" below with your actual form ID
-      That's it! Submissions go straight to your email inbox.
-    -->
-    <form
-      class="signup-form"
-      id="email-form"
-      action="https://formspree.io/f/YOUR_FORM_ID"
-      method="POST"
-    >
+    <form class="signup-form" id="email-form" onsubmit="return false;">
       <div class="form-row">
-        <input type="text"  name="name"  placeholder="Your Name"         required />
-        <input type="email" name="email" placeholder="Your Email Address" required />
+        <input type="text"  id="sg-name"  placeholder="Your Name"         required autocomplete="given-name" />
+        <input type="email" id="sg-email" placeholder="Your Email Address" required autocomplete="email" />
       </div>
-      <button type="submit" class="btn btn-primary">Subscribe</button>
+      <button type="button" class="btn btn-primary" id="sg-submit">Subscribe</button>
     </form>
 
     <div class="form-success" id="form-success">
       Thank you — you're now part of our garden. ✿
+    </div>
+
+    <div class="form-error" id="form-error">
+      Something went wrong. Please try again or email us directly.
     </div>
 
     <p class="form-note">We respect your privacy. Unsubscribe anytime.</p>
@@ -777,9 +778,9 @@
   <span class="footer-logo">Secret Gardens</span>
   <p>
     Full Service Salon &nbsp;·&nbsp; Solvang, California<br/>
-    <a href="tel:+18055551234">(805) 555-1234</a>
+    <a href="tel:+18056931848">(805) 693-1848</a>
     &nbsp;·&nbsp;
-    <a href="mailto:teri@secretgardenssalon.com">teri@secretgardenssalon.com</a>
+    <a href="mailto:secret.gardens@yahoo.com">secret.gardens@yahoo.com</a>
   </p>
   <p style="margin-top:1.6rem; font-size:.7rem; opacity:.4;">
     &copy; <span id="year"></span> Secret Gardens Salon. All rights reserved.
@@ -801,7 +802,6 @@
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
       if (e.isIntersecting) {
-        // Stagger siblings
         const siblings = [...e.target.parentElement.querySelectorAll('.reveal')];
         const delay = siblings.indexOf(e.target) * 100;
         setTimeout(() => e.target.classList.add('visible'), delay);
@@ -811,29 +811,73 @@
   }, { threshold: 0.12 });
   revealEls.forEach(el => observer.observe(el));
 
-  // ── Form submit (Formspree AJAX) ──
-  const form = document.getElementById('email-form');
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = form.querySelector('button');
+  // ── EmailOctopus Subscription ──
+  // SETUP: Replace the two values below with your own from EmailOctopus.
+  //   API Key  → emailoctopus.com → Account → API
+  //   List ID  → emailoctopus.com → Lists → click your list → copy the ID from the URL
+  const EO_API_KEY = 'YOUR_EMAILOCTOPUS_API_KEY';
+  const EO_LIST_ID = 'YOUR_LIST_ID';
+
+  document.getElementById('sg-submit').addEventListener('click', async () => {
+    const nameVal  = document.getElementById('sg-name').value.trim();
+    const emailVal = document.getElementById('sg-email').value.trim();
+
+    // Basic validation
+    if (!nameVal || !emailVal) {
+      document.getElementById('sg-name').reportValidity();
+      document.getElementById('sg-email').reportValidity();
+      return;
+    }
+
+    const btn = document.getElementById('sg-submit');
+    const formEl = document.getElementById('email-form');
+    const successEl = document.getElementById('form-success');
+    const errorEl = document.getElementById('form-error');
+
     btn.textContent = 'Sending…';
     btn.disabled = true;
+    errorEl.style.display = 'none';
+
+    // Split name into first / last (last is optional)
+    const parts = nameVal.split(' ');
+    const firstName = parts[0];
+    const lastName  = parts.slice(1).join(' ') || '';
+
     try {
-      const res = await fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { 'Accept': 'application/json' }
-      });
-      if (res.ok) {
-        form.style.display = 'none';
-        document.getElementById('form-success').style.display = 'block';
+      const res = await fetch(
+        `https://emailoctopus.com/api/1.6/lists/${EO_LIST_ID}/contacts`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            api_key:       EO_API_KEY,
+            email_address: emailVal,
+            fields: {
+              FirstName: firstName,
+              LastName:  lastName
+            },
+            status: 'SUBSCRIBED'
+          })
+        }
+      );
+
+      const data = await res.json();
+
+      // EmailOctopus returns 200 on success; 409 means already subscribed (still friendly)
+      if (res.ok || res.status === 409) {
+        formEl.style.display = 'none';
+        successEl.style.display = 'block';
       } else {
-        btn.textContent = 'Try Again';
+        console.error('EmailOctopus error:', data);
+        btn.textContent = 'Subscribe';
         btn.disabled = false;
+        errorEl.style.display = 'block';
       }
-    } catch {
-      btn.textContent = 'Try Again';
+    } catch (err) {
+      console.error('Network error:', err);
+      btn.textContent = 'Subscribe';
       btn.disabled = false;
+      errorEl.style.display = 'block';
     }
   });
 </script>
