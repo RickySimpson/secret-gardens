@@ -530,25 +530,39 @@
       transform: translateY(-2px) !important;
     }
 
-    /* Success / error messages from EO */
-    .eo-form-wrap [class*="success"],
-    .eo-form-wrap [class*="error"] {
-      font-family: var(--font-display) !important;
-      font-style: italic !important;
-      font-size: 1.1rem !important;
-      border-radius: 2px !important;
-      padding: 1.1rem 1.5rem !important;
-    }
-    .eo-form-wrap [class*="success"] {
-      background: rgba(125,155,118,.12) !important;
-      color: var(--sage-dk) !important;
-      border: 1px solid var(--sage) !important;
-    }
-    .eo-form-wrap [class*="error"] {
-      background: rgba(201,150,122,.12) !important;
-      color: #8b4a30 !important;
-      border: 1px solid var(--rose) !important;
-    }
+/* Success / error messages from EmailOctopus */
+.eo-form-wrap .emailoctopus-success-message,
+.eo-form-wrap .emailoctopus-error-message {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.eo-form-wrap .emailoctopus-success-message:not(:empty),
+.eo-form-wrap .emailoctopus-error-message:not(:empty) {
+  display: block !important;
+  font-family: var(--font-display) !important;
+  font-style: italic !important;
+  font-size: 1.1rem !important;
+  border-radius: 2px !important;
+  padding: 1.1rem 1.5rem !important;
+  margin-bottom: 2.2rem !important;
+  text-align: center !important;
+}
+
+.eo-form-wrap .emailoctopus-success-message:not(:empty) {
+  background: rgba(125,155,118,.12) !important;
+  color: var(--sage-dk) !important;
+  border: 1px solid var(--sage) !important;
+}
+
+.eo-form-wrap .emailoctopus-error-message:not(:empty) {
+  background: rgba(201,150,122,.12) !important;
+  color: #8b4a30 !important;
+  border: 1px solid var(--rose) !important;
+}
 
     /* ── FOOTER ── */
     footer {
