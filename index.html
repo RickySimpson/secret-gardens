@@ -3,35 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Secret Gardens Salon - Solvang, CA</title>
+  <title>Secret Gardens Salon — Solvang, CA</title>
   <meta name="description" content="Secret Gardens is a full-service salon in the heart of Solvang, California. Hair, color, nails, skincare, and more — lovingly run by family." />
 
   <link rel="icon" type="image/png" sizes="32x32" href="images/secret-gardens-favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="64x64" href="images/secret-gardens-favicon-64x64.png" />
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <style>
-    /* ── Tokens ── */
+    /* ═══════════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════════ */
     :root {
-      --cream:    #faf6f0;
-      --warm:     #f2ebe0;
-      --sage:     #7d9b76;
-      --sage-dk:  #556b50;
-      --rose:     #c9967a;
-      --rose-lt:  #e8c4b0;
-      --bark:     #3b2e28;
-      --mist:     #b8c9b4;
-      --text:     #3b2e28;
-      --text-lt:  #55443c;
+      --cream:      #faf6f0;
+      --warm:       #f2ebe0;
+      --sage:       #7d9b76;
+      --sage-dk:    #556b50;
+      --sage-deep:  #28382400;
+      --forest:     #2a3a26;
+      --rose:       #c9967a;
+      --rose-lt:    #e8c4b0;
+      --bark:       #3b2e28;
+      --mist:       #b8c9b4;
+      --text:       #3b2e28;
+      --text-lt:    #55443c;
 
       --font-display: 'Cormorant Garamond', Georgia, serif;
       --font-body:    'Jost', sans-serif;
+
+      --ease-spring: cubic-bezier(.16, 1, .3, 1);
+      --ease-smooth: cubic-bezier(.45, 0, .55, 1);
+
+      --shadow-sm:   0 2px 12px rgba(59,46,40,.06);
+      --shadow-md:   0 8px 32px rgba(59,46,40,.10);
+      --shadow-lg:   0 20px 60px rgba(59,46,40,.16);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -43,433 +52,757 @@
       overflow-x: hidden;
     }
 
-    /* ── Decorative SVG helpers ── */
-    .leaf-divider { display: block; margin: 0 auto; opacity: .35; }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1.25rem 3rem;
-      background: rgba(250,246,240,.92);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(125,155,118,.18);
-      transition: box-shadow .3s;
+    /* ═══════════════════════════════════════════
+       SCROLL PROGRESS BAR
+    ═══════════════════════════════════════════ */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, var(--sage) 0%, var(--rose-lt) 100%);
+      transform-origin: left center;
+      transform: scaleX(0);
+      z-index: 300;
+      pointer-events: none;
     }
-    nav.scrolled { box-shadow: 0 2px 24px rgba(59,46,40,.08); }
+
+    /* ═══════════════════════════════════════════
+       NAVIGATION
+    ═══════════════════════════════════════════ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.6rem 3.5rem;
+      background: transparent;
+      transition: background .5s var(--ease-smooth),
+                  backdrop-filter .5s,
+                  padding .4s var(--ease-smooth),
+                  box-shadow .5s;
+    }
+    nav.scrolled {
+      background: rgba(250,246,240,.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 rgba(125,155,118,.18), var(--shadow-sm);
+      padding: 1.05rem 3.5rem;
+    }
 
     .nav-logo {
       font-family: var(--font-display);
-      font-size: 1.65rem;
-      font-weight: 500;
+      font-size: 1.6rem;
+      font-weight: 400;
       letter-spacing: .04em;
       color: var(--bark);
       text-decoration: none;
+      position: relative; z-index: 1;
     }
-    .nav-logo span { color: var(--sage); font-style: italic; }
+    .nav-logo em { font-style: italic; color: var(--sage-dk); }
 
-    .nav-links {
-      display: flex; gap: 2.4rem; list-style: none;
-    }
+    .nav-links { display: flex; gap: 2.6rem; list-style: none; }
     .nav-links a {
-      font-size: .92rem;
-      letter-spacing: .1em;
+      font-size: .78rem;
+      letter-spacing: .13em;
       text-transform: uppercase;
       color: var(--text-lt);
       text-decoration: none;
       font-weight: 500;
-      transition: color .2s;
+      position: relative;
+      padding-bottom: 4px;
+      transition: color .25s;
     }
-    .nav-links a:hover { color: var(--sage-dk); }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--sage);
+      transition: width .35s var(--ease-spring);
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--sage-dk); }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { width: 100%; }
 
-    /* ── HERO ── */
+    /* Mobile toggle */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      z-index: 201;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 22px; height: 1.5px;
+      background: var(--bark);
+      transition: transform .35s var(--ease-spring), opacity .25s;
+    }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* Mobile menu overlay */
+    .nav-mobile {
+      display: none;
+      position: fixed; inset: 0;
+      background: var(--cream);
+      z-index: 199;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.8rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .4s var(--ease-spring);
+    }
+    .nav-mobile.open { opacity: 1; pointer-events: all; }
+    .nav-mobile a {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--bark);
+      text-decoration: none;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: color .2s, opacity .4s var(--ease-spring), transform .4s var(--ease-spring);
+    }
+    .nav-mobile.open a {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .nav-mobile.open a:nth-child(1) { transition-delay: .08s; }
+    .nav-mobile.open a:nth-child(2) { transition-delay: .14s; }
+    .nav-mobile.open a:nth-child(3) { transition-delay: .20s; }
+    .nav-mobile.open a:nth-child(4) { transition-delay: .26s; }
+    .nav-mobile a:hover { color: var(--sage-dk); }
+
+    /* ═══════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════ */
     #hero {
       min-height: 100vh;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       text-align: center;
-      padding: 6rem 2rem 4rem;
+      padding: 6rem 2rem 5rem;
       position: relative;
       overflow: hidden;
       background:
-        radial-gradient(ellipse 80% 60% at 50% 110%, rgba(125,155,118,.18) 0%, transparent 70%),
-        radial-gradient(ellipse 60% 40% at 20% 20%, rgba(201,150,122,.10) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 55% at 50% 105%, rgba(125,155,118,.24) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 35% at 12% 12%, rgba(201,150,122,.14) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 30% at 88% 18%, rgba(184,201,180,.16) 0%, transparent 50%),
         var(--cream);
     }
 
-    /* Floating botanical blobs */
+    /* Magnetic cursor glow — the signature wow */
+    #hero-glow {
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(201,150,122,.16)  0%,
+        rgba(125,155,118,.11) 38%,
+        transparent           70%
+      );
+      pointer-events: none;
+      z-index: 1;
+      will-change: transform;
+      opacity: 0;
+      transition: opacity .6s;
+      transform: translate(-350px, -350px);
+    }
+
+    /* Parallax botanical blobs */
     .hero-blob {
       position: absolute;
-      opacity: .13;
       pointer-events: none;
+      will-change: transform;
     }
-    .hero-blob-1 { top: 6%; left: 2%; width: 340px; transform: rotate(-15deg); }
-    .hero-blob-2 { bottom: 4%; right: 2%; width: 300px; transform: rotate(20deg) scaleX(-1); }
-    .hero-blob-3 { top: 40%; left: -3%; width: 200px; transform: rotate(5deg); }
-    .hero-blob-4 { top: 15%; right: 4%; width: 240px; transform: rotate(-8deg); }
+    .hero-blob-1 { top: 3%; left: 0%; width: 380px; opacity: .11; }
+    .hero-blob-2 { bottom: 1%; right: 0%; width: 330px; opacity: .10; }
+    .hero-blob-3 { top: 36%; left: -4%; width: 230px; opacity: .12; }
+    .hero-blob-4 { top: 8%; right: 2%; width: 270px; opacity: .09; }
+
+    /* Content layer sits above glow */
+    .hero-content {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: center;
+    }
 
     .hero-eyebrow {
-      font-size: .92rem;
-      letter-spacing: .18em;
+      display: inline-flex; align-items: center; gap: .9em;
+      font-size: .74rem;
+      letter-spacing: .22em;
       text-transform: uppercase;
-      color: var(--sage);
-      margin-bottom: 1.4rem;
+      color: var(--sage-dk);
       font-weight: 500;
+      margin-bottom: 1.8rem;
       opacity: 0;
-      animation: fadeUp .9s ease .2s forwards;
+      animation: fadeUp .8s var(--ease-spring) .1s forwards;
+    }
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+      content: '';
+      display: block;
+      width: 32px; height: 1px;
+      background: var(--sage);
+      flex-shrink: 0;
     }
 
+    /* Cinematic word-mask title reveal */
     h1 {
       font-family: var(--font-display);
-      font-size: clamp(3.8rem, 9vw, 8rem);
+      font-size: clamp(4.8rem, 12vw, 11rem);
       font-weight: 400;
-      line-height: 1.0;
-      letter-spacing: .01em;
+      line-height: .92;
+      letter-spacing: -.01em;
       color: var(--bark);
+    }
+    .word-mask {
+      display: block;
+      overflow: hidden;
+      line-height: 1.05;
+    }
+    .word-inner {
+      display: block;
       opacity: 0;
-      animation: fadeUp .9s ease .4s forwards;
+      transform: translateY(110%);
+      animation: wordReveal 1.2s var(--ease-spring) forwards;
     }
-    h1 em {
-      font-style: italic;
-      color: var(--sage-dk);
+    .word-mask:nth-child(1) .word-inner { animation-delay: .28s; }
+    .word-mask:nth-child(2) .word-inner { animation-delay: .52s; }
+    @keyframes wordReveal {
+      to { opacity: 1; transform: translateY(0); }
     }
+    h1 em { font-style: italic; color: var(--sage-dk); }
 
     .hero-sub {
-      margin-top: 1.6rem;
+      margin-top: 2rem;
       font-family: var(--font-display);
-      font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+      font-size: clamp(1.15rem, 2.4vw, 1.65rem);
       font-style: italic;
       color: var(--text-lt);
       opacity: 0;
-      animation: fadeUp .9s ease .6s forwards;
+      animation: fadeUp .9s var(--ease-spring) .82s forwards;
     }
 
     .hero-location {
-      margin-top: .7rem;
-      font-size: .9rem;
-      letter-spacing: .14em;
+      margin-top: .65rem;
+      font-size: .74rem;
+      letter-spacing: .2em;
       text-transform: uppercase;
       font-weight: 500;
       color: var(--rose);
       opacity: 0;
-      animation: fadeUp .9s ease .75s forwards;
+      animation: fadeUp .9s var(--ease-spring) .98s forwards;
     }
+    .hero-location .dot { margin: 0 .55em; opacity: .45; }
 
     .hero-cta {
-      margin-top: 3rem;
-      opacity: 0;
-      animation: fadeUp .9s ease .9s forwards;
+      margin-top: 3.4rem;
       display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: center;
+      opacity: 0;
+      animation: fadeUp .9s var(--ease-spring) 1.12s forwards;
     }
 
+    /* Scroll cue */
+    .scroll-cue {
+      position: absolute;
+      bottom: 2.4rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      opacity: 0;
+      animation: fadeIn 1s ease 2s forwards;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .scroll-cue-label {
+      font-size: .62rem;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--text-lt);
+      opacity: .4;
+    }
+    .scroll-cue-line {
+      width: 1px; height: 42px;
+      background: linear-gradient(to bottom, var(--sage) 0%, transparent 100%);
+      animation: scrollBob 2.4s var(--ease-smooth) infinite;
+    }
+    @keyframes scrollBob {
+      0%, 100% { opacity: .35; transform: translateY(0); }
+      50%       { opacity: .75; transform: translateY(7px); }
+    }
+
+    /* ═══════════════════════════════════════════
+       BUTTONS
+    ═══════════════════════════════════════════ */
     .btn {
-      display: inline-block;
-      padding: 1rem 2.6rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 1.1rem 2.7rem;
       font-family: var(--font-body);
-      font-size: .9rem;
-      letter-spacing: .12em;
+      font-size: .78rem;
+      letter-spacing: .14em;
       text-transform: uppercase;
       text-decoration: none;
-      border-radius: 2px;
-      transition: all .25s;
-      cursor: pointer;
-      border: none;
+      border-radius: 3px;
+      cursor: pointer; border: none;
       font-weight: 500;
+      position: relative; overflow: hidden;
+      transition: transform .3s var(--ease-spring), box-shadow .3s;
     }
-    .btn-primary {
-      background: var(--sage);
-      color: #fff;
+
+    .btn-primary { background: var(--sage); color: #fff; }
+    .btn-primary::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--sage-dk);
+      transform: translateY(101%);
+      transition: transform .4s var(--ease-spring);
     }
-    .btn-primary:hover { background: var(--sage-dk); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(85,107,80,.25); }
+    .btn-primary .btn-label { position: relative; z-index: 1; }
+    .btn-primary:hover::before { transform: translateY(0); }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(85,107,80,.32);
+    }
 
     .btn-outline {
       background: transparent;
       color: var(--bark);
-      border: 1px solid rgba(59,46,40,.3);
+      border: 1px solid rgba(59,46,40,.22);
     }
-    .btn-outline:hover { border-color: var(--sage); color: var(--sage-dk); }
+    .btn-outline:hover {
+      border-color: var(--sage);
+      color: var(--sage-dk);
+      background: rgba(125,155,118,.06);
+      transform: translateY(-2px);
+    }
 
-    /* ── SECTION SHARED ── */
-    section { padding: 6rem 2rem; }
-
-    .section-inner { max-width: 1100px; margin: 0 auto; }
+    /* ═══════════════════════════════════════════
+       SHARED SECTION STYLES
+    ═══════════════════════════════════════════ */
+    section { padding: 7.5rem 2rem; }
+    .section-inner { max-width: 1120px; margin: 0 auto; }
     .section-inner.narrow { max-width: 720px; }
 
     .section-label {
-      font-size: .88rem;
-      letter-spacing: .18em;
+      display: inline-flex; align-items: center; gap: .8em;
+      font-size: .72rem;
+      letter-spacing: .22em;
       text-transform: uppercase;
-      color: var(--sage);
-      display: block;
-      margin-bottom: .9rem;
+      color: var(--sage-dk);
       font-weight: 500;
+      margin-bottom: 1.1rem;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 26px; height: 1px;
+      background: currentColor;
+      flex-shrink: 0;
     }
 
     h2 {
       font-family: var(--font-display);
-      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-size: clamp(2.7rem, 5.5vw, 4.6rem);
       font-weight: 400;
-      line-height: 1.12;
+      line-height: 1.05;
       color: var(--bark);
     }
     h2 em { font-style: italic; color: var(--sage-dk); }
 
     p { color: var(--text-lt); font-size: 1.08rem; }
 
-    /* ── DIVIDER LINE ── */
     .divider {
-      width: 48px; height: 1px;
-      background: var(--rose-lt);
-      margin: 1.8rem 0;
+      width: 56px; height: 1px;
+      background: linear-gradient(to right, var(--rose-lt), transparent);
+      margin: 2rem 0;
     }
 
-    /* ── ABOUT ── */
-    #about { background: var(--warm); }
+    /* ═══════════════════════════════════════════
+       ABOUT
+    ═══════════════════════════════════════════ */
+    #about {
+      background: var(--warm);
+      position: relative; overflow: hidden;
+    }
+    /* Soft organic curve transition from hero */
+    #about::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 0; right: 0;
+      height: 90px;
+      background: var(--cream);
+      clip-path: ellipse(58% 100% at 50% 0%);
+    }
 
     .about-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 5rem;
+      gap: 6rem;
       align-items: center;
     }
 
-    .about-text p + p { margin-top: 1.1rem; }
-
-    .about-portrait {
-      position: relative;
+    .about-text { position: relative; }
+    /* Ghost botanical behind text */
+    .about-leaf-bg {
+      position: absolute;
+      left: -50px; top: -30px;
+      width: 200px; opacity: .05;
+      pointer-events: none; z-index: 0;
     }
+    .about-text > * { position: relative; z-index: 1; }
+    .about-text p { margin-top: 1.25rem; font-size: 1.1rem; line-height: 1.9; }
+
+    .about-portrait { position: relative; }
+
     .portrait-frame {
       width: 100%;
       aspect-ratio: 3/4;
-      background:
-        linear-gradient(135deg, var(--mist) 0%, var(--rose-lt) 100%);
-      border-radius: 2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
+      border-radius: 5px;
       overflow: hidden;
+      position: relative;
+      box-shadow: var(--shadow-lg);
     }
-    .portrait-frame::before {
-      content: '';
-      position: absolute;
-      inset: 12px;
-      border: 1px solid rgba(255,255,255,.5);
-      border-radius: 1px;
-      pointer-events: none;
-    }
-    .portrait-placeholder {
-      font-family: var(--font-display);
-      font-style: italic;
-      font-size: 1rem;
-      color: rgba(59,46,40,.45);
-      text-align: center;
-      padding: 2rem;
-    }
-
-    /* ── Responsive portrait image ── */
     .portrait-frame img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;       /* fills the frame, crops edges — never stretches */
-      object-position: center top; /* bias crop toward the top (faces/subjects) */
+      height: 108%;
+      object-fit: cover;
+      object-position: center top;
       display: block;
+      will-change: transform;
+      transform: translateY(-4%);
     }
-    .portrait-accent {
-      position: absolute;
-      bottom: -16px; right: -16px;
-      width: 80px; height: 80px;
-      border: 2px solid var(--rose-lt);
-      border-radius: 2px;
+    /* Subtle vignette overlay */
+    .portrait-frame::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 55%, rgba(42,58,38,.18) 100%);
+      pointer-events: none;
     }
 
-    /* ── SERVICES ── */
+    .portrait-accent {
+      position: absolute;
+      bottom: -22px; right: -22px;
+      width: 110px; height: 110px;
+      border: 1.5px solid var(--rose-lt);
+      border-radius: 4px;
+      z-index: -1;
+    }
+    .portrait-accent-2 {
+      position: absolute;
+      top: -16px; left: -16px;
+      width: 64px; height: 64px;
+      border: 1px solid rgba(125,155,118,.3);
+      border-radius: 3px;
+      z-index: -1;
+    }
+
+    /* ═══════════════════════════════════════════
+       ATMOSPHERE QUOTE BREAK
+    ═══════════════════════════════════════════ */
+    #atmosphere {
+      background: var(--forest);
+      padding: 9rem 2rem;
+      position: relative; overflow: hidden;
+    }
+
+    /* Ghost botanicals — large, low opacity */
+    .atmo-botanical {
+      position: absolute;
+      top: 50%; right: -6%;
+      transform: translateY(-50%);
+      width: 500px; opacity: .05;
+      pointer-events: none;
+    }
+    .atmo-botanical-left {
+      position: absolute;
+      top: 50%; left: -5%;
+      transform: translateY(-50%) scaleX(-1);
+      width: 380px; opacity: .04;
+      pointer-events: none;
+    }
+
+    .atmo-inner {
+      max-width: 880px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative; z-index: 1;
+    }
+
+    .atmo-mark {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      color: var(--sage);
+      opacity: .22;
+      line-height: .7;
+      display: block;
+      margin-bottom: 1.6rem;
+      font-weight: 300;
+    }
+
+    blockquote p {
+      font-family: var(--font-display);
+      font-size: clamp(1.55rem, 3vw, 2.7rem);
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(255,255,255,.92);
+      line-height: 1.55;
+    }
+    blockquote cite {
+      display: block;
+      margin-top: 2.6rem;
+      font-family: var(--font-body);
+      font-size: .72rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--mist);
+      font-weight: 400;
+      opacity: .65;
+    }
+    .atmo-stem {
+      display: block;
+      width: 1px; height: 52px;
+      background: linear-gradient(to bottom, var(--sage), transparent);
+      margin: 2.5rem auto 0;
+      opacity: .35;
+    }
+
+    /* ═══════════════════════════════════════════
+       SERVICES
+    ═══════════════════════════════════════════ */
     #services { background: var(--cream); }
 
     .services-intro {
       text-align: center;
-      margin-bottom: 4rem;
+      margin-bottom: 5rem;
     }
-    .services-intro .divider { margin: 1.4rem auto; }
+    .services-intro .divider { margin: 1.6rem auto; }
+    .services-intro .section-label {
+      justify-content: center;
+    }
+    .services-intro .section-label::before { display: none; }
 
+    /* Grid wrapper clips rounded corners without killing card shadows */
+    .services-grid-shell {
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(125,155,118,.14);
+      box-shadow: var(--shadow-sm);
+    }
     .services-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5px;
-      background: rgba(125,155,118,.15);
-      border: 1.5px solid rgba(125,155,118,.15);
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(125,155,118,.13);
     }
 
     .service-card {
       background: var(--cream);
-      padding: 2.4rem 2rem;
-      transition: background .2s;
+      padding: 2.8rem 2.2rem 2.6rem;
+      position: relative; overflow: hidden;
+      transition: background .3s;
+      cursor: default;
     }
-    .service-card:hover { background: var(--warm); }
+
+    /* Ghost number */
+    .service-card::before {
+      content: attr(data-num);
+      position: absolute;
+      top: .6rem; right: 1.2rem;
+      font-family: var(--font-display);
+      font-size: 4.5rem;
+      font-weight: 600;
+      line-height: 1;
+      color: var(--sage);
+      opacity: .07;
+      pointer-events: none;
+      transition: opacity .4s;
+    }
+    /* Sliding bottom accent bar */
+    .service-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: linear-gradient(90deg, var(--sage), var(--rose-lt));
+      transition: width .45s var(--ease-spring);
+    }
+    .service-card:hover { background: #fff; }
+    .service-card:hover::before { opacity: .13; }
+    .service-card:hover::after { width: 100%; }
 
     .service-icon {
-      width: 36px; height: 36px;
-      margin-bottom: 1rem;
+      width: 40px; height: 40px;
+      margin-bottom: 1.3rem;
       opacity: .6;
+      transition: opacity .3s, transform .4s var(--ease-spring);
+      display: block;
     }
+    .service-card:hover .service-icon {
+      opacity: 1;
+      transform: scale(1.08) translateY(-2px);
+    }
+
     .service-card h3 {
       font-family: var(--font-display);
-      font-size: 1.55rem;
+      font-size: 1.5rem;
       font-weight: 500;
       color: var(--bark);
-      margin-bottom: .6rem;
+      margin-bottom: .65rem;
+      line-height: 1.18;
     }
-    .service-card p { font-size: 1.02rem; line-height: 1.75; }
+    .service-card p {
+      font-size: .98rem;
+      line-height: 1.8;
+      color: var(--text-lt);
+    }
 
-    /* ── VISIT / INFO ── */
+    /* ═══════════════════════════════════════════
+       VISIT
+    ═══════════════════════════════════════════ */
     #visit {
-      background:
-        linear-gradient(160deg, var(--sage-dk) 0%, #3d5438 100%);
-      color: #fff;
+      background: var(--forest);
+      position: relative; overflow: hidden;
     }
+    #visit::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 55% 55% at 95% 50%, rgba(125,155,118,.14) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 40% at 5%  80%, rgba(201,150,122,.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
     #visit .section-label { color: var(--mist); }
+    #visit .section-label::before { background: var(--mist); opacity: .5; }
     #visit h2 { color: #fff; }
     #visit h2 em { color: var(--rose-lt); }
 
     .visit-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 5rem;
       align-items: start;
-      margin-top: 3rem;
+      margin-top: 3.5rem;
+      position: relative; z-index: 1;
     }
 
-    .info-block { margin-bottom: 2.5rem; }
-    .info-block h4 {
+    .info-cards { display: flex; flex-direction: column; gap: .8rem; }
+
+    .info-card {
+      background: rgba(255,255,255,.055);
+      border: 1px solid rgba(255,255,255,.085);
+      border-radius: 4px;
+      padding: 1.75rem 2rem;
+      transition: background .3s, border-color .3s;
+    }
+    .info-card:hover {
+      background: rgba(255,255,255,.09);
+      border-color: rgba(255,255,255,.15);
+    }
+    .info-card h4 {
       font-family: var(--font-display);
-      font-size: 1.3rem;
-      font-weight: 500;
-      letter-spacing: .04em;
+      font-size: 1.15rem;
+      font-weight: 400;
+      font-style: italic;
       color: var(--rose-lt);
-      margin-bottom: .7rem;
+      margin-bottom: .75rem;
+      letter-spacing: .02em;
     }
-    .info-block p, .info-block address {
+    .info-card p,
+    .info-card address {
       font-style: normal;
-      color: rgba(255,255,255,.85);
+      color: rgba(255,255,255,.78);
       font-size: 1.05rem;
-      line-height: 1.9;
+      line-height: 1.85;
     }
+    .info-card a {
+      color: rgba(255,255,255,.78);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .info-card a:hover { color: var(--rose-lt); }
 
     .hours-table { width: 100%; border-collapse: collapse; }
     .hours-table td {
-      padding: .4rem 0;
+      padding: .32rem 0;
       font-size: 1.02rem;
-      color: rgba(255,255,255,.85);
+      color: rgba(255,255,255,.78);
     }
-    .hours-table td:first-child { color: rgba(255,255,255,.6); width: 55%; }
+    .hours-table td:first-child { color: rgba(255,255,255,.48); width: 58%; }
 
     .map-embed {
       width: 100%;
       aspect-ratio: 4/3;
-      border-radius: 2px;
+      border-radius: 5px;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.1);
+      box-shadow: 0 12px 50px rgba(0,0,0,.35);
     }
     .map-open-link {
-      display: inline-block;
-      margin-top: .9rem;
+      display: inline-flex; align-items: center; gap: .4em;
+      margin-top: 1.1rem;
       color: var(--mist);
-      font-family: var(--font-body);
-      font-size: .92rem;
-      letter-spacing: .08em;
+      font-size: .76rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
       text-decoration: none;
-      opacity: .85;
-      transition: opacity .2s;
+      font-weight: 500;
+      transition: color .25s, gap .25s;
     }
-    .map-open-link:hover { opacity: 1; color: var(--rose-lt); }
+    .map-open-link:hover { color: var(--rose-lt); gap: .65em; }
 
-    /* ── EMAIL SIGNUP ── */
+    /* ═══════════════════════════════════════════
+       EMAIL SIGNUP
+    ═══════════════════════════════════════════ */
     #signup {
       background: var(--warm);
       text-align: center;
+      position: relative; overflow: hidden;
     }
-    #signup .section-inner { max-width: 600px; }
-    #signup .divider { margin: 1.4rem auto; }
-    #signup p { margin-bottom: 2.2rem; }
-
-    .signup-form {
-      display: flex;
-      gap: .75rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .signup-form input[type="email"],
-    .signup-form input[type="text"] {
-      flex: 1;
-      min-width: 200px;
-      padding: 1rem 1.3rem;
-      border: 1px solid rgba(125,155,118,.35);
-      border-radius: 2px;
-      background: #fff;
-      font-family: var(--font-body);
-      font-size: 1.05rem;
-      color: var(--bark);
-      outline: none;
-      transition: border-color .2s;
-    }
-    .signup-form input:focus { border-color: var(--sage); }
-
-    .form-row {
-      display: flex; gap: .75rem; width: 100%; flex-wrap: wrap;
-    }
-    .form-row input { flex: 1; min-width: 160px; }
-
-    .signup-form button {
-      padding: 1rem 2.2rem;
-      font-size: .9rem;
+    /* Ghosted botanical watermark */
+    #signup::after {
+      content: '';
+      position: absolute;
+      right: -3%; bottom: -8%;
+      width: 460px; height: 560px;
+      background:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 320 400' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M160 380 Q80 300 60 200 Q40 100 120 40 Q200 -20 240 80 Q280 180 220 280 Q180 340 160 380Z' fill='%237d9b76'/%3E%3Cpath d='M160 380 L160 40' stroke='%23556b50' stroke-width='2' opacity='.4'/%3E%3Cpath d='M160 200 Q100 160 80 120' stroke='%23556b50' stroke-width='1.5' opacity='.3'/%3E%3Cpath d='M160 240 Q220 200 240 160' stroke='%23556b50' stroke-width='1.5' opacity='.3'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+      opacity: .07;
+      pointer-events: none;
     }
 
-    .form-note {
-      margin-top: 1rem;
-      font-size: .92rem;
-      color: var(--text-lt);
-      opacity: .8;
+    #signup .section-inner {
+      max-width: 640px;
+      position: relative; z-index: 1;
+    }
+    #signup .section-label { justify-content: center; }
+    #signup .section-label::before { display: none; }
+    #signup .divider { margin: 1.6rem auto; }
+    #signup > .section-inner > p {
+      margin-bottom: 2.5rem;
+      font-size: 1.1rem;
     }
 
-    .form-success {
-      display: none;
-      padding: 1.2rem 2rem;
-      background: rgba(125,155,118,.12);
-      border: 1px solid var(--sage);
-      border-radius: 2px;
-      color: var(--sage-dk);
-      font-family: var(--font-display);
-      font-style: italic;
-      font-size: 1.15rem;
-    }
-
-    .form-error {
-      display: none;
-      padding: 1rem 2rem;
-      background: rgba(201,150,122,.12);
-      border: 1px solid var(--rose);
-      border-radius: 2px;
-      color: #8b4a30;
-      font-size: 1rem;
-      margin-top: .5rem;
-    }
-
-    /* ── EmailOctopus embed overrides ── */
+    /* EmailOctopus overrides — preserved exactly */
     .eo-form-wrap {
       max-width: 560px;
       margin: 0 auto 1rem;
     }
-
-    /* Wrapper injected by EO */
     .eo-form-wrap [class*="email-octopus"] {
       background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
+      border: none !important; box-shadow: none !important;
       padding: 0 !important;
       font-family: var(--font-body) !important;
     }
-
-    /* Labels */
     .eo-form-wrap label {
       font-family: var(--font-body) !important;
       font-size: 1rem !important;
@@ -477,13 +810,11 @@
       font-weight: 500 !important;
       letter-spacing: .04em !important;
     }
-
-    /* All inputs inside EO form — cast wide net to catch every field type */
     .eo-form-wrap input {
       width: 100% !important;
       padding: 1rem 1.3rem !important;
       border: 1px solid rgba(125,155,118,.4) !important;
-      border-radius: 2px !important;
+      border-radius: 3px !important;
       background: #ffffff !important;
       background-color: #ffffff !important;
       font-family: var(--font-body) !important;
@@ -493,37 +824,32 @@
       margin-bottom: .75rem !important;
       -webkit-appearance: none !important;
       appearance: none !important;
+      transition: border-color .25s, box-shadow .25s !important;
     }
     .eo-form-wrap input:focus {
       outline: none !important;
       border-color: var(--sage) !important;
       background: #ffffff !important;
+      box-shadow: 0 0 0 3px rgba(125,155,118,.13) !important;
     }
-    /* Override any inherited warm/cream background from parent sections */
-    .eo-form-wrap * {
-      background-color: transparent !important;
-    }
+    .eo-form-wrap * { background-color: transparent !important; }
     .eo-form-wrap input,
     .eo-form-wrap input[type="text"],
-    .eo-form-wrap input[type="email"] {
-      background-color: #ffffff !important;
-    }
-
-    /* Submit button */
+    .eo-form-wrap input[type="email"] { background-color: #ffffff !important; }
     .eo-form-wrap input[type="submit"],
     .eo-form-wrap button[type="submit"] {
       background: var(--sage) !important;
       color: #fff !important;
       border: none !important;
-      border-radius: 2px !important;
-      padding: 1rem 2.6rem !important;
+      border-radius: 3px !important;
+      padding: 1.05rem 2.6rem !important;
       font-family: var(--font-body) !important;
-      font-size: .9rem !important;
+      font-size: .8rem !important;
       font-weight: 500 !important;
-      letter-spacing: .12em !important;
+      letter-spacing: .14em !important;
       text-transform: uppercase !important;
       cursor: pointer !important;
-      transition: background .25s, transform .25s !important;
+      transition: background .25s, transform .3s !important;
       box-shadow: none !important;
       width: auto !important;
     }
@@ -532,126 +858,215 @@
       background: var(--sage-dk) !important;
       transform: translateY(-2px) !important;
     }
-
-/* Success / error messages from EmailOctopus */
-.eo-form-wrap .emailoctopus-success-message,
-.eo-form-wrap .emailoctopus-error-message {
-  display: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-}
-
-.eo-form-wrap .emailoctopus-success-message:not(:empty),
-.eo-form-wrap .emailoctopus-error-message:not(:empty) {
-  display: block !important;
-  font-family: var(--font-display) !important;
-  font-style: italic !important;
-  font-size: 1.1rem !important;
-  border-radius: 2px !important;
-  padding: 1.1rem 1.5rem !important;
-  margin-bottom: 2.2rem !important;
-  text-align: center !important;
-}
-
-.eo-form-wrap .emailoctopus-success-message:not(:empty) {
-  background: rgba(125,155,118,.12) !important;
-  color: var(--sage-dk) !important;
-  border: 1px solid var(--sage) !important;
-}
-
-.eo-form-wrap .emailoctopus-error-message:not(:empty) {
-  background: rgba(201,150,122,.12) !important;
-  color: #8b4a30 !important;
-  border: 1px solid var(--rose) !important;
-}
-
-    /* ── FOOTER ── */
-    footer {
-      background: var(--sage-dk);
-      color: rgba(255,255,255,.75);
-      text-align: center;
-      padding: 3.5rem 2rem;
-      border-top: 3px solid var(--sage);
+    .eo-form-wrap .emailoctopus-success-message,
+    .eo-form-wrap .emailoctopus-error-message {
+      display: none !important; margin: 0 !important;
+      padding: 0 !important; border: 0 !important;
+      background: transparent !important;
     }
+    .eo-form-wrap .emailoctopus-success-message:not(:empty),
+    .eo-form-wrap .emailoctopus-error-message:not(:empty) {
+      display: block !important;
+      font-family: var(--font-display) !important;
+      font-style: italic !important;
+      font-size: 1.1rem !important;
+      border-radius: 3px !important;
+      padding: 1.1rem 1.5rem !important;
+      margin-bottom: 2.2rem !important;
+      text-align: center !important;
+    }
+    .eo-form-wrap .emailoctopus-success-message:not(:empty) {
+      background: rgba(125,155,118,.12) !important;
+      color: var(--sage-dk) !important;
+      border: 1px solid var(--sage) !important;
+    }
+    .eo-form-wrap .emailoctopus-error-message:not(:empty) {
+      background: rgba(201,150,122,.12) !important;
+      color: #8b4a30 !important;
+      border: 1px solid var(--rose) !important;
+    }
+
+    .form-note {
+      margin-top: .8rem;
+      font-size: .88rem;
+      color: var(--text-lt);
+      opacity: .6;
+    }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    footer {
+      background: var(--bark);
+      text-align: center;
+      padding: 5.5rem 2rem 3.5rem;
+      position: relative; overflow: hidden;
+    }
+    /* Giant ghosted wordmark */
+    .footer-watermark {
+      position: absolute;
+      bottom: -.5rem; left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 13vw, 11rem);
+      font-style: italic;
+      font-weight: 600;
+      color: rgba(255,255,255,.025);
+      white-space: nowrap;
+      pointer-events: none;
+      line-height: 1;
+      letter-spacing: .02em;
+      user-select: none;
+    }
+
     .footer-logo {
       font-family: var(--font-display);
-      font-size: 2.1rem;
+      font-size: 2.3rem;
       font-weight: 400;
-      color: #ffffff;
+      color: rgba(255,255,255,.88);
       font-style: italic;
       display: block;
-      margin-bottom: .8rem;
+      margin-bottom: .35rem;
       letter-spacing: .02em;
+      position: relative;
+    }
+    .footer-tagline {
+      font-size: .7rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--sage);
+      display: block;
+      margin-bottom: 2.8rem;
+      position: relative;
+    }
+    .footer-rule {
+      width: 38px; height: 1px;
+      background: rgba(255,255,255,.1);
+      margin: 0 auto 2.8rem;
     }
     footer p {
       font-size: 1rem;
       line-height: 2.2;
-      color: rgba(255,255,255,.85);
+      color: rgba(255,255,255,.6);
+      position: relative;
     }
     footer a {
       color: var(--rose-lt);
       text-decoration: none;
-      font-weight: 500;
       transition: color .2s;
     }
     footer a:hover { color: #fff; }
     .footer-copy {
-      margin-top: 1.8rem;
-      font-size: .82rem !important;
-      color: rgba(255,255,255,.45) !important;
+      margin-top: 2.8rem;
+      font-size: .72rem !important;
+      color: rgba(255,255,255,.22) !important;
     }
 
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(22px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
+    /* ═══════════════════════════════════════════
+       SCROLL REVEAL
+    ═══════════════════════════════════════════ */
     .reveal {
       opacity: 0;
-      transform: translateY(28px);
-      transition: opacity .75s ease, transform .75s ease;
+      transform: translateY(34px);
+      transition: opacity .85s var(--ease-spring), transform .85s var(--ease-spring);
     }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ═══════════════════════════════════════════
+       KEYFRAMES
+    ═══════════════════════════════════════════ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
     }
 
-    /* ── RESPONSIVE ── */
+    /* ═══════════════════════════════════════════
+       ACCESSIBILITY — REDUCED MOTION
+    ═══════════════════════════════════════════ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+      .reveal, .word-inner { opacity: 1; transform: none; }
+      .scroll-cue { display: none; }
+      #hero-glow { display: none; }
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
     @media (max-width: 768px) {
-      nav { padding: 1rem 1.4rem; }
+      nav { padding: 1.1rem 1.5rem; }
+      nav.scrolled { padding: .9rem 1.5rem; }
       .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+      .nav-mobile { display: flex; }
 
-      .about-grid,
-      .visit-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
       .about-portrait { order: -1; }
       .portrait-frame { aspect-ratio: 4/3; }
+      .portrait-frame img { height: 100%; transform: none; }
 
-      section { padding: 4rem 1.4rem; }
+      .visit-grid { grid-template-columns: 1fr; gap: 3rem; }
+
+      section { padding: 5rem 1.5rem; }
+      #atmosphere { padding: 6rem 1.5rem; }
+      .atmo-botanical,
+      .atmo-botanical-left { display: none; }
+    }
+
+    @media (max-width: 520px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .hero-cta { flex-direction: column; align-items: center; }
+      .btn { width: 100%; max-width: 300px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
+<div id="progress-bar" aria-hidden="true"></div>
+
+<!-- ── MOBILE MENU ── -->
+<div class="nav-mobile" id="nav-mobile" aria-hidden="true">
+  <a href="#about"   class="mobile-link">Our Story</a>
+  <a href="#services" class="mobile-link">Services</a>
+  <a href="#visit"   class="mobile-link">Visit Us</a>
+  <a href="#signup"  class="mobile-link">Stay in Touch</a>
+</div>
+
+<!-- ── NAVIGATION ── -->
 <nav id="main-nav">
-  <a href="#hero" class="nav-logo">Secret <span>Gardens</span></a>
+  <a href="#hero" class="nav-logo">Secret <em>Gardens</em></a>
   <ul class="nav-links">
     <li><a href="#about">Our Story</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#visit">Visit Us</a></li>
     <li><a href="#signup">Stay in Touch</a></li>
   </ul>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- ── HERO ── -->
+<!-- ══════════════════════════════════════════
+     HERO — Cinematic entry + cursor glow
+══════════════════════════════════════════ -->
 <section id="hero">
 
-  <!-- Botanical SVG decorations -->
-  <svg class="hero-blob hero-blob-1" viewBox="0 0 320 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <div id="hero-glow" aria-hidden="true"></div>
+
+  <!-- Parallax botanical shapes -->
+  <svg class="hero-blob hero-blob-1" viewBox="0 0 320 400" fill="none" aria-hidden="true">
     <path d="M160 380 Q80 300 60 200 Q40 100 120 40 Q200 -20 240 80 Q280 180 220 280 Q180 340 160 380Z" fill="#7d9b76"/>
     <path d="M160 380 L160 40" stroke="#556b50" stroke-width="1.5" opacity=".4"/>
     <path d="M160 200 Q100 160 80 120" stroke="#556b50" stroke-width="1" opacity=".3"/>
@@ -659,69 +1074,113 @@
     <path d="M160 160 Q110 130 90 100" stroke="#556b50" stroke-width="1" opacity=".3"/>
     <path d="M160 300 Q200 270 210 240" stroke="#556b50" stroke-width="1" opacity=".3"/>
   </svg>
-
-  <svg class="hero-blob hero-blob-2" viewBox="0 0 320 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg class="hero-blob hero-blob-2" viewBox="0 0 320 400" fill="none" aria-hidden="true">
     <path d="M160 380 Q80 300 60 200 Q40 100 120 40 Q200 -20 240 80 Q280 180 220 280 Q180 340 160 380Z" fill="#c9967a"/>
     <path d="M160 380 L160 40" stroke="#a07060" stroke-width="1.5" opacity=".4"/>
     <path d="M160 200 Q100 160 80 120" stroke="#a07060" stroke-width="1" opacity=".3"/>
     <path d="M160 240 Q220 200 240 160" stroke="#a07060" stroke-width="1" opacity=".3"/>
   </svg>
-
-  <svg class="hero-blob hero-blob-3" viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg class="hero-blob hero-blob-3" viewBox="0 0 200 260" fill="none" aria-hidden="true">
     <ellipse cx="100" cy="130" rx="60" ry="100" fill="#b8c9b4"/>
     <line x1="100" y1="20" x2="100" y2="240" stroke="#7d9b76" stroke-width="1"/>
     <path d="M100 100 Q60 80 50 60" stroke="#7d9b76" stroke-width="1" opacity=".5"/>
     <path d="M100 140 Q140 120 150 100" stroke="#7d9b76" stroke-width="1" opacity=".5"/>
   </svg>
-
-  <svg class="hero-blob hero-blob-4" viewBox="0 0 240 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg class="hero-blob hero-blob-4" viewBox="0 0 240 280" fill="none" aria-hidden="true">
     <path d="M120 270 Q50 210 40 140 Q30 70 100 30 Q170 -10 200 60 Q230 130 180 200 Q155 240 120 270Z" fill="#b8c9b4"/>
   </svg>
 
-  <p class="hero-eyebrow">Full Service Salon · Solvang, California</p>
-  <h1>Secret<br/><em>Gardens</em></h1>
-  <p class="hero-sub">Where beauty blooms in the heart of a Danish village</p>
-  <p class="hero-location">&#9670; Solvang, California &#9670;</p>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Full Service Salon · Solvang, California</p>
 
-  <div class="hero-cta">
-    <a href="#services" class="btn btn-primary">Explore Services</a>
-    <a href="#visit" class="btn btn-outline">Find Us</a>
+    <h1>
+      <span class="word-mask"><span class="word-inner">Secret</span></span>
+      <span class="word-mask"><em class="word-inner">Gardens</em></span>
+    </h1>
+
+    <p class="hero-sub">Where beauty blooms in the heart of a Danish village</p>
+    <p class="hero-location">
+      <span class="dot">✦</span>Solvang, California<span class="dot">✦</span>
+    </p>
+
+    <div class="hero-cta">
+      <a href="#services" class="btn btn-primary">
+        <span class="btn-label">Explore Services</span>
+      </a>
+      <a href="#visit" class="btn btn-outline">Find Us</a>
+    </div>
+  </div>
+
+  <div class="scroll-cue" aria-hidden="true">
+    <span class="scroll-cue-label">Scroll</span>
+    <div class="scroll-cue-line"></div>
   </div>
 
 </section>
 
-<!-- ── ABOUT ── -->
+<!-- ══════════════════════════════════════════
+     ABOUT
+══════════════════════════════════════════ -->
 <section id="about">
   <div class="section-inner">
     <div class="about-grid">
 
       <div class="about-text reveal">
+        <svg class="about-leaf-bg" viewBox="0 0 320 400" fill="none" aria-hidden="true">
+          <path d="M160 380 Q80 300 60 200 Q40 100 120 40 Q200 -20 240 80 Q280 180 220 280 Q180 340 160 380Z" fill="#7d9b76"/>
+        </svg>
         <span class="section-label">Our Story</span>
         <h2>A garden<br/><em>tended by family</em></h2>
         <div class="divider"></div>
-        <p>
-          Secret Gardens is more than a salon — it's a family legacy rooted in care, craft, and community. Nestled in the charming Danish village of Solvang, our doors have always been open with warmth and a personal touch that only family can offer.
-        </p>
-        <p>
-          Our grandmother brought the vision. Our mother built upon it. Together, they have cultivated a space where every guest is treated like a dear friend — where you can sit down, breathe, and leave feeling truly cared for.
-        </p>
-        <p>
-          From precision cuts to color artistry, nails, and skincare, every service we offer is delivered with the love and expertise that only comes from years of passion for this craft.
-        </p>
+        <p>Secret Gardens is more than a salon — it's a family legacy rooted in care, craft, and community. Nestled in the charming Danish village of Solvang, our doors have always been open with warmth and a personal touch that only family can offer.</p>
+        <p>Our grandmother brought the vision. Our mother built upon it. Together, they have cultivated a space where every guest is treated like a dear friend — where you can sit down, breathe, and leave feeling truly cared for.</p>
+        <p>From precision cuts to color artistry, nails, and skincare, every service we offer is delivered with the love and expertise that only comes from years of passion for this craft.</p>
       </div>
 
       <div class="about-portrait reveal">
         <div class="portrait-frame">
-          <img src="images/secret-gardens-main.jpg" alt="Photo of the salon" />
+          <img src="images/secret-gardens-main.jpg" alt="Secret Gardens Salon interior" id="portrait-img" />
         </div>
-        <div class="portrait-accent"></div>
+        <div class="portrait-accent" aria-hidden="true"></div>
+        <div class="portrait-accent-2" aria-hidden="true"></div>
       </div>
 
     </div>
   </div>
 </section>
 
-<!-- ── SERVICES ── -->
+<!-- ══════════════════════════════════════════
+     ATMOSPHERE — Dark quote break
+══════════════════════════════════════════ -->
+<section id="atmosphere" aria-label="Our philosophy">
+
+  <svg class="atmo-botanical" viewBox="0 0 320 400" fill="none" aria-hidden="true">
+    <path d="M160 380 Q80 300 60 200 Q40 100 120 40 Q200 -20 240 80 Q280 180 220 280 Q180 340 160 380Z" fill="#b8c9b4"/>
+    <path d="M160 380 L160 40" stroke="#7d9b76" stroke-width="2" opacity=".5"/>
+    <path d="M160 200 Q100 160 80 120" stroke="#7d9b76" stroke-width="1.5" opacity=".4"/>
+    <path d="M160 240 Q220 200 240 160" stroke="#7d9b76" stroke-width="1.5" opacity=".4"/>
+    <path d="M160 140 Q108 110 88 82" stroke="#7d9b76" stroke-width="1" opacity=".3"/>
+    <path d="M160 300 Q206 272 216 246" stroke="#7d9b76" stroke-width="1" opacity=".3"/>
+  </svg>
+  <svg class="atmo-botanical-left" viewBox="0 0 320 400" fill="none" aria-hidden="true">
+    <path d="M160 380 Q80 300 60 200 Q40 100 120 40 Q200 -20 240 80 Q280 180 220 280 Q180 340 160 380Z" fill="#b8c9b4"/>
+    <path d="M160 380 L160 40" stroke="#7d9b76" stroke-width="2" opacity=".5"/>
+  </svg>
+
+  <div class="atmo-inner reveal">
+    <span class="atmo-mark" aria-hidden="true">&ldquo;</span>
+    <blockquote>
+      <p>We don't just style hair — we care for people. Every chair has been warmed by our family's hands for years, and we wouldn't have it any other way.</p>
+      <cite>— Secret Gardens, Solvang</cite>
+    </blockquote>
+    <span class="atmo-stem" aria-hidden="true"></span>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════
+     SERVICES — Numbered cards with reveal
+══════════════════════════════════════════ -->
 <section id="services">
   <div class="section-inner">
 
@@ -729,130 +1188,127 @@
       <span class="section-label">What We Offer</span>
       <h2>Full Service, <em>Full Heart</em></h2>
       <div class="divider"></div>
-      <p style="max-width:520px; margin:0 auto;">Every treatment is tailored to you — no rush, no compromise. Just beautiful results and genuine care.</p>
+      <p style="max-width:520px; margin:0 auto; font-size:1.1rem;">Every treatment is tailored to you — no rush, no compromise. Just beautiful results and genuine care.</p>
     </div>
 
-    <div class="services-grid">
+    <div class="services-grid-shell">
+      <div class="services-grid">
 
-      <div class="service-card reveal">
-        <!-- Scissors icon -->
-        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="10" cy="26" r="5" stroke="#7d9b76" stroke-width="1.4"/>
-          <circle cx="10" cy="10" r="5" stroke="#7d9b76" stroke-width="1.4"/>
-          <line x1="14.2" y1="23.8" x2="30" y2="8" stroke="#7d9b76" stroke-width="1.4" stroke-linecap="round"/>
-          <line x1="14.2" y1="12.2" x2="30" y2="28" stroke="#7d9b76" stroke-width="1.4" stroke-linecap="round"/>
-        </svg>
-        <h3>Haircuts &amp; Styling</h3>
-        <p>Precision cuts for all lengths, textures, and styles. Blowouts, curls, and everything in between.</p>
+        <div class="service-card reveal" data-num="01">
+          <svg class="service-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <circle cx="10" cy="26" r="5" stroke="#7d9b76" stroke-width="1.4"/>
+            <circle cx="10" cy="10" r="5" stroke="#7d9b76" stroke-width="1.4"/>
+            <line x1="14.2" y1="23.8" x2="30" y2="8" stroke="#7d9b76" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="14.2" y1="12.2" x2="30" y2="28" stroke="#7d9b76" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <h3>Haircuts &amp; Styling</h3>
+          <p>Precision cuts for all lengths, textures, and styles. Blowouts, curls, and everything in between.</p>
+        </div>
+
+        <div class="service-card reveal" data-num="02">
+          <svg class="service-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <path d="M8 28 Q8 10 18 6 Q28 10 28 28 Q23 32 18 32 Q13 32 8 28Z" stroke="#c9967a" stroke-width="1.4"/>
+            <path d="M8 28 Q13 24 18 26 Q23 24 28 28" stroke="#c9967a" stroke-width="1" opacity=".5"/>
+          </svg>
+          <h3>Color &amp; Highlights</h3>
+          <p>From rich all-over color to sun-kissed highlights and dimensional toning, we blend artistry with care.</p>
+        </div>
+
+        <div class="service-card reveal" data-num="03">
+          <svg class="service-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <path d="M4 22 Q9 12 14 18 Q19 24 24 14 Q29 4 32 14" stroke="#7d9b76" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M4 28 Q9 18 14 24 Q19 30 24 20 Q29 10 32 20" stroke="#b8c9b4" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <h3>Balayage &amp; Ombré</h3>
+          <p>Hand-painted color for natural, effortless-looking dimension that grows out beautifully.</p>
+        </div>
+
+        <div class="service-card reveal" data-num="04">
+          <svg class="service-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <rect x="10" y="4" width="16" height="22" rx="8" stroke="#c9967a" stroke-width="1.4"/>
+            <line x1="18" y1="26" x2="18" y2="32" stroke="#c9967a" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="13" y1="32" x2="23" y2="32" stroke="#c9967a" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <h3>Nails &amp; Manicures</h3>
+          <p>Manicures, pedicures, gel, and nail art. Hands and feet pampered to perfection.</p>
+        </div>
+
+        <div class="service-card reveal" data-num="05">
+          <svg class="service-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <path d="M18 32 Q6 24 6 14 Q6 4 18 4 Q30 4 30 14 Q30 24 18 32Z" stroke="#7d9b76" stroke-width="1.4"/>
+            <line x1="18" y1="32" x2="18" y2="10" stroke="#7d9b76" stroke-width="1" opacity=".5"/>
+            <path d="M18 20 Q12 16 10 12" stroke="#7d9b76" stroke-width="1" opacity=".4"/>
+            <path d="M18 16 Q24 13 26 10" stroke="#7d9b76" stroke-width="1" opacity=".4"/>
+          </svg>
+          <h3>Facials, Skincare &amp; Massage</h3>
+          <p>Rejuvenating facials, skincare treatments, and relaxing massage services tailored to your needs.</p>
+        </div>
+
+        <div class="service-card reveal" data-num="06">
+          <svg class="service-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <path d="M18 4 L21 14 L32 14 L23 20 L26 30 L18 24 L10 30 L13 20 L4 14 L15 14 Z" stroke="#c9967a" stroke-width="1.3"/>
+          </svg>
+          <h3>Special Occasions</h3>
+          <p>Updos, bridal styling, and event-ready looks. We'll make your most important moments unforgettable.</p>
+        </div>
+
+        <div class="service-card reveal" data-num="07">
+          <svg class="service-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <rect x="6" y="12" width="24" height="14" rx="3" stroke="#7d9b76" stroke-width="1.4"/>
+            <path d="M10 12 Q10 6 18 6 Q26 6 26 12" stroke="#7d9b76" stroke-width="1.2"/>
+          </svg>
+          <h3>Waxing</h3>
+          <p>Smooth, precise waxing services performed with care and attention to your comfort.</p>
+        </div>
+
+        <div class="service-card reveal" data-num="08">
+          <svg class="service-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <path d="M8 8 Q8 18 18 18 Q28 18 28 28" stroke="#b8c9b4" stroke-width="1.4" stroke-linecap="round"/>
+            <circle cx="18" cy="18" r="5" stroke="#7d9b76" stroke-width="1.3"/>
+          </svg>
+          <h3>Perms &amp; Texture</h3>
+          <p>Body waves, curls, and texture services to transform and revitalize your hair.</p>
+        </div>
+
       </div>
-
-      <div class="service-card reveal">
-        <!-- Color swatch icon -->
-        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M8 28 Q8 10 18 6 Q28 10 28 28 Q23 32 18 32 Q13 32 8 28Z" stroke="#c9967a" stroke-width="1.4" fill="none"/>
-          <path d="M8 28 Q13 24 18 26 Q23 24 28 28" stroke="#c9967a" stroke-width="1" opacity=".5"/>
-        </svg>
-        <h3>Color &amp; Highlights</h3>
-        <p>From rich all-over color to sun-kissed highlights and dimensional toning, we blend artistry with care.</p>
-      </div>
-
-      <div class="service-card reveal">
-        <!-- Wave icon -->
-        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 22 Q9 12 14 18 Q19 24 24 14 Q29 4 32 14" stroke="#7d9b76" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-          <path d="M4 28 Q9 18 14 24 Q19 30 24 20 Q29 10 32 20" stroke="#b8c9b4" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-        </svg>
-        <h3>Balayage &amp; Ombré</h3>
-        <p>Hand-painted color for natural, effortless-looking dimension that grows out beautifully.</p>
-      </div>
-
-      <div class="service-card reveal">
-        <!-- Nail icon -->
-        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="10" y="4" width="16" height="22" rx="8" stroke="#c9967a" stroke-width="1.4"/>
-          <line x1="18" y1="26" x2="18" y2="32" stroke="#c9967a" stroke-width="1.4" stroke-linecap="round"/>
-          <line x1="13" y1="32" x2="23" y2="32" stroke="#c9967a" stroke-width="1.4" stroke-linecap="round"/>
-        </svg>
-        <h3>Nails &amp; Manicures</h3>
-        <p>Manicures, pedicures, gel, and nail art. Hands and feet pampered to perfection.</p>
-      </div>
-
-      <div class="service-card reveal">
-        <!-- Leaf/spa icon -->
-        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 32 Q6 24 6 14 Q6 4 18 4 Q30 4 30 14 Q30 24 18 32Z" stroke="#7d9b76" stroke-width="1.4" fill="none"/>
-          <line x1="18" y1="32" x2="18" y2="10" stroke="#7d9b76" stroke-width="1" opacity=".5"/>
-          <path d="M18 20 Q12 16 10 12" stroke="#7d9b76" stroke-width="1" opacity=".4"/>
-          <path d="M18 16 Q24 13 26 10" stroke="#7d9b76" stroke-width="1" opacity=".4"/>
-        </svg>
-        <h3>Facials, Skincare &amp; Massage</h3>
-        <p>Rejuvenating facials, skincare treatments, and relaxing massage services tailored to your needs.</p>
-      </div>
-
-      <div class="service-card reveal">
-        <!-- Star/occasion icon -->
-        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 4 L21 14 L32 14 L23 20 L26 30 L18 24 L10 30 L13 20 L4 14 L15 14 Z" stroke="#c9967a" stroke-width="1.3" fill="none"/>
-        </svg>
-        <h3>Special Occasions</h3>
-        <p>Updos, bridal styling, and event-ready looks. We'll make your most important moments unforgettable.</p>
-      </div>
-
-      <div class="service-card reveal">
-        <!-- Wax/smooth icon -->
-        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="6" y="12" width="24" height="14" rx="3" stroke="#7d9b76" stroke-width="1.4"/>
-          <path d="M10 12 Q10 6 18 6 Q26 6 26 12" stroke="#7d9b76" stroke-width="1.2"/>
-        </svg>
-        <h3>Waxing</h3>
-        <p>Smooth, precise waxing services performed with care and attention to your comfort.</p>
-      </div>
-
-      <div class="service-card reveal">
-        <!-- Curl/perm icon -->
-        <svg class="service-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M8 8 Q8 18 18 18 Q28 18 28 28" stroke="#b8c9b4" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-          <circle cx="18" cy="18" r="5" stroke="#7d9b76" stroke-width="1.3" fill="none"/>
-        </svg>
-        <h3>Perms &amp; Texture</h3>
-        <p>Body waves, curls, and texture services to transform and revitalize your hair.</p>
-      </div>
-
     </div>
   </div>
 </section>
 
-<!-- ── VISIT ── -->
+<!-- ══════════════════════════════════════════
+     VISIT
+══════════════════════════════════════════ -->
 <section id="visit">
   <div class="section-inner">
     <span class="section-label">Come See Us</span>
     <h2>Find Us in <em>Solvang</em></h2>
 
     <div class="visit-grid">
-      <div class="reveal">
 
-        <div class="info-block">
+      <div class="info-cards reveal">
+
+        <div class="info-card">
           <h4>Location</h4>
           <address>
             Secret Gardens Salon<br/>
-            485 Alisal Rd # 185,<br/>
+            485 Alisal Rd # 185<br/>
             Solvang, CA 93463
           </address>
         </div>
 
-        <div class="info-block">
+        <div class="info-card">
           <h4>Hours</h4>
           <table class="hours-table">
-            <tr><td>Tuesday - Saturday</td><td>9:00 am – 5:00 pm</td></tr>
-            <tr><td>Sunday - Monday</td><td>Closed</td></tr>
+            <tr><td>Tuesday – Saturday</td><td>9:00 am – 5:00 pm</td></tr>
+            <tr><td>Sunday – Monday</td><td>Closed</td></tr>
           </table>
         </div>
 
-        <div class="info-block">
+        <div class="info-card">
           <h4>Contact</h4>
           <p>
-            <a href="tel:+18056931848" style="color:rgba(255,255,255,.75); text-decoration:none;">(805) 693-1848</a><br/>
-            <a href="mailto:hello@secretgardenssalon.com" style="color:rgba(255,255,255,.75); text-decoration:none;">hello@secretgardenssalon.com</a>
+            <a href="tel:+18056931848">(805) 693-1848</a><br/>
+            <a href="mailto:hello@secretgardenssalon.com">hello@secretgardenssalon.com</a>
           </p>
         </div>
 
@@ -862,22 +1318,27 @@
         <div class="map-embed">
           <iframe
             src="https://maps.google.com/maps?q=485+Alisal+Rd+%23185,+Solvang,+CA+93463&output=embed&z=16"
-            width="100%"
-            height="100%"
-            style="border:0; border-radius:2px; display:block;"
-            allowfullscreen=""
-            loading="lazy"
+            width="100%" height="100%"
+            style="border:0; display:block;"
+            allowfullscreen="" loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
             title="Secret Gardens Salon on Google Maps">
           </iframe>
         </div>
-        <a href="https://maps.app.goo.gl/gKf22ap3V543uq9S6" target="_blank" class="map-open-link">Open in Google Maps ↗</a>
+        <a href="https://maps.app.goo.gl/gKf22ap3V543uq9S6"
+           target="_blank" rel="noopener"
+           class="map-open-link">
+          Open in Google Maps ↗
+        </a>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- ── EMAIL SIGNUP ── -->
+<!-- ══════════════════════════════════════════
+     EMAIL SIGNUP
+══════════════════════════════════════════ -->
 <section id="signup">
   <div class="section-inner reveal">
     <span class="section-label">Stay Connected</span>
@@ -885,22 +1346,26 @@
     <div class="divider"></div>
     <p>Be the first to hear about seasonal promotions, new services, and salon news.</p>
 
-    <!-- EmailOctopus embedded form -->
     <div class="eo-form-wrap">
-      <script async src="https://eocampaign1.com/form/a9dc5378-4115-11f1-88b1-03e32652ea5b.js" data-form="a9dc5378-4115-11f1-88b1-03e32652ea5b"></script>
+      <script async src="https://eocampaign1.com/form/a9dc5378-4115-11f1-88b1-03e32652ea5b.js"
+              data-form="a9dc5378-4115-11f1-88b1-03e32652ea5b"></script>
     </div>
 
     <p class="form-note">We respect your privacy. Unsubscribe anytime.</p>
   </div>
 </section>
 
-<!-- ── FOOTER ── -->
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
 <footer>
+  <div class="footer-watermark" aria-hidden="true">Secret Gardens</div>
   <span class="footer-logo">Secret Gardens</span>
+  <span class="footer-tagline">Full Service Salon · Solvang, California</span>
+  <div class="footer-rule"></div>
   <p>
-    Full Service Salon &nbsp;·&nbsp; Solvang, California<br/>
     <a href="tel:+18056931848">(805) 693-1848</a>
-    &nbsp;·&nbsp;
+    &nbsp;&middot;&nbsp;
     <a href="mailto:hello@secretgardenssalon.com">hello@secretgardenssalon.com</a>
   </p>
   <p class="footer-copy">
@@ -909,30 +1374,150 @@
 </footer>
 
 <script>
-  // ── Year ──
+  'use strict';
+
+  /* ── Utilities ── */
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasHover       = window.matchMedia('(hover: hover)').matches;
+
+  /* ── Year ── */
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // ── Nav shadow on scroll ──
+  /* ── Scroll progress bar ── */
+  const progressBar = document.getElementById('progress-bar');
+  function updateProgress() {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    if (max > 0) progressBar.style.transform = 'scaleX(' + (window.scrollY / max) + ')';
+  }
+
+  /* ── Nav state ── */
   const nav = document.getElementById('main-nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 40);
+  function updateNav() {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  }
+
+  /* ── Active nav links ── */
+  const sections  = document.querySelectorAll('section[id]');
+  const navAnchors = document.querySelectorAll('.nav-links a[href^="#"]');
+  function updateActiveLinks() {
+    let active = '';
+    sections.forEach(function(s) {
+      if (window.scrollY >= s.offsetTop - 140) active = s.id;
+    });
+    navAnchors.forEach(function(a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + active);
+    });
+  }
+
+  /* ── Parallax for hero blobs ── */
+  const blob1 = document.querySelector('.hero-blob-1');
+  const blob2 = document.querySelector('.hero-blob-2');
+  const blob3 = document.querySelector('.hero-blob-3');
+  const blob4 = document.querySelector('.hero-blob-4');
+
+  function updateParallax() {
+    if (prefersReduced) return;
+    var sy = window.scrollY;
+    if (sy > window.innerHeight * 1.5) return;
+    blob1.style.transform = 'rotate(-15deg) translateY(' + (sy * 0.13) + 'px)';
+    blob2.style.transform = 'rotate(20deg) scaleX(-1) translateY(' + (sy * -0.1) + 'px)';
+    blob3.style.transform = 'rotate(5deg) translateY(' + (sy * 0.22) + 'px)';
+    blob4.style.transform = 'rotate(-8deg) translateY(' + (sy * -0.17) + 'px)';
+
+    /* Portrait parallax — image drifts slightly slower than frame */
+    var img = document.getElementById('portrait-img');
+    if (img) {
+      var rect = img.parentElement.getBoundingClientRect();
+      if (rect.bottom > 0 && rect.top < window.innerHeight) {
+        var offset = (rect.top + rect.height / 2 - window.innerHeight / 2) * 0.055;
+        img.style.transform = 'translateY(' + offset + 'px)';
+      }
+    }
+  }
+
+  /* ── Combined scroll handler ── */
+  window.addEventListener('scroll', function() {
+    updateProgress();
+    updateNav();
+    updateActiveLinks();
+    updateParallax();
+  }, { passive: true });
+
+  /* ── Intersection reveal ── */
+  var revealEls = document.querySelectorAll('.reveal');
+  var revealObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (!entry.isIntersecting) return;
+      var el = entry.target;
+      var parent = el.parentElement;
+      var siblings = Array.prototype.filter.call(parent.children, function(c) {
+        return c.classList.contains('reveal');
+      });
+      var delay = siblings.indexOf(el) * 95;
+      setTimeout(function() { el.classList.add('visible'); }, delay);
+      revealObserver.unobserve(el);
+    });
+  }, { threshold: 0.09, rootMargin: '0px 0px -36px 0px' });
+  revealEls.forEach(function(el) { revealObserver.observe(el); });
+
+  /* ── Magnetic cursor glow — the signature interaction ── */
+  if (hasHover && !prefersReduced) {
+    var glow   = document.getElementById('hero-glow');
+    var heroEl = document.getElementById('hero');
+    var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    var gx = mx, gy = my;
+    var active = false;
+
+    heroEl.addEventListener('mouseenter', function() {
+      active = true;
+      glow.style.opacity = '1';
+    });
+    heroEl.addEventListener('mouseleave', function() {
+      active = false;
+      glow.style.opacity = '0';
+    });
+    heroEl.addEventListener('mousemove', function(e) {
+      mx = e.clientX;
+      my = e.clientY;
+    });
+
+    /* Smooth lag via lerp on RAF */
+    function animateGlow() {
+      if (active) {
+        gx += (mx - gx) * 0.072;
+        gy += (my - gy) * 0.072;
+        glow.style.transform = 'translate(' + (gx - 350) + 'px,' + (gy - 350) + 'px)';
+      }
+      requestAnimationFrame(animateGlow);
+    }
+    animateGlow();
+  }
+
+  /* ── Mobile menu ── */
+  var toggle     = document.getElementById('nav-toggle');
+  var mobileMenu = document.getElementById('nav-mobile');
+
+  toggle.addEventListener('click', function() {
+    var isOpen = toggle.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    mobileMenu.classList.toggle('open', isOpen);
+    mobileMenu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
   });
 
-  // ── Reveal on scroll ──
-  const revealEls = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        const siblings = [...e.target.parentElement.querySelectorAll('.reveal')];
-        const delay = siblings.indexOf(e.target) * 100;
-        setTimeout(() => e.target.classList.add('visible'), delay);
-        observer.unobserve(e.target);
-      }
+  document.querySelectorAll('.mobile-link').forEach(function(a) {
+    a.addEventListener('click', function() {
+      toggle.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      mobileMenu.classList.remove('open');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
     });
-  }, { threshold: 0.12 });
-  revealEls.forEach(el => observer.observe(el));
+  });
 
-  // EmailOctopus form is handled by the embedded script above.
+  /* ── Init ── */
+  updateNav();
+  updateActiveLinks();
 </script>
 
 </body>
