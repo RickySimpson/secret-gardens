@@ -962,6 +962,102 @@
     .map-open-link:hover { color: var(--rose-lt); gap: .65em; }
 
     /* ═══════════════════════════════════════════
+       CONTACT FORM
+    ═══════════════════════════════════════════ */
+    .contact-form-wrap {
+      margin-top: 3rem;
+      background: rgba(255,255,255,.055);
+      border: 1px solid rgba(255,255,255,.085);
+      border-radius: 4px;
+      padding: 2.2rem 2rem;
+      position: relative; z-index: 1;
+    }
+    .contact-form-wrap h4 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--rose-lt);
+      margin-bottom: .4rem;
+      letter-spacing: .02em;
+    }
+    .contact-form-wrap .cf-intro {
+      font-size: .95rem;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 1.6rem;
+    }
+    .form-row { margin-bottom: 1.1rem; }
+    .form-row label {
+      display: block;
+      font-size: .82rem;
+      letter-spacing: .06em;
+      color: rgba(255,255,255,.7);
+      margin-bottom: .4rem;
+      font-weight: 500;
+    }
+    .required-tag { color: var(--mist); font-weight: 400; font-style: italic; letter-spacing: 0; }
+    .form-row input,
+    .form-row textarea {
+      width: 100%;
+      padding: .85rem 1rem;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 3px;
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      transition: border-color .25s, background .25s;
+    }
+    .form-row input::placeholder,
+    .form-row textarea::placeholder { color: rgba(255,255,255,.32); }
+    .form-row input:focus,
+    .form-row textarea:focus {
+      outline: none;
+      border-color: var(--sage);
+      background: rgba(255,255,255,.1);
+    }
+    .form-row input[aria-invalid="true"],
+    .form-row textarea[aria-invalid="true"] { border-color: var(--rose); }
+
+    .cf-field-error {
+      display: block;
+      font-size: .78rem;
+      color: var(--rose-lt);
+      margin-top: .4rem;
+      min-height: 0;
+    }
+    .cf-success,
+    .cf-error {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.05rem;
+    }
+    .cf-success:not(:empty) {
+      background: rgba(125,155,118,.15);
+      border: 1px solid var(--sage);
+      color: #fff;
+      padding: 1rem 1.2rem;
+      border-radius: 3px;
+      margin-bottom: 1.4rem;
+    }
+    .cf-error:not(:empty) {
+      background: rgba(201,150,122,.15);
+      border: 1px solid var(--rose);
+      color: #fff;
+      padding: 1rem 1.2rem;
+      border-radius: 3px;
+      margin-bottom: 1.4rem;
+      font-family: var(--font-body);
+      font-style: normal;
+      font-size: .92rem;
+    }
+    [data-fs-submit-btn]:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ═══════════════════════════════════════════
        EMAIL SIGNUP
     ═══════════════════════════════════════════ */
     #signup {
@@ -1554,7 +1650,7 @@
           <h4>Contact</h4>
           <p>
             <a href="tel:+18056931848">(805) 693-1848</a><br/>
-            <a href="mailto:hello@secretgardenssalon.com">hello@secretgardenssalon.com</a>
+            <a href="#contact-form">Send us a message →</a>
           </p>
         </div>
 
@@ -1579,6 +1675,48 @@
       </div>
 
     </div>
+
+    <!-- ── CONTACT FORM ── -->
+    <div class="contact-form-wrap reveal" id="contact-form">
+      <h4>Send a Message</h4>
+      <p class="cf-intro">Prefer not to call? Fill this out and we'll get back to you — a phone number helps us reach you fastest.</p>
+
+      <div data-fs-success class="cf-success" aria-live="polite"></div>
+      <div data-fs-error class="cf-error" aria-live="polite"></div>
+
+      <form id="my-form">
+        <div class="form-row">
+          <label for="cf-name">Name</label>
+          <input type="text" id="cf-name" name="name" data-fs-field required />
+          <span class="cf-field-error" data-fs-error="name"></span>
+        </div>
+
+        <div class="form-row">
+          <label for="cf-email">Email</label>
+          <input type="email" id="cf-email" name="email" data-fs-field required />
+          <span class="cf-field-error" data-fs-error="email"></span>
+        </div>
+
+        <div class="form-row">
+          <label for="cf-phone">Phone <span class="required-tag">(required — so we can reach you)</span></label>
+          <input type="tel" id="cf-phone" name="phone" data-fs-field required
+                 pattern="[\d\s\-\(\)\+]{7,}"
+                 placeholder="(805) 555-0123" />
+          <span class="cf-field-error" data-fs-error="phone"></span>
+        </div>
+
+        <div class="form-row">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" rows="4" data-fs-field required></textarea>
+          <span class="cf-field-error" data-fs-error="message"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" data-fs-submit-btn>
+          <span class="btn-label">Send Message</span>
+        </button>
+      </form>
+    </div>
+
   </div>
 </section>
 
@@ -1829,6 +1967,12 @@
   updateNav();
   updateActiveLinks();
 </script>
+
+<script>
+  window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+  formspree('initForm', { formElement: '#my-form', formId: 'mvkppgzd' });
+</script>
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
 </body>
 </html>
