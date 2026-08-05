@@ -1306,8 +1306,18 @@
 
       .about-grid { grid-template-columns: 1fr; gap: 3rem; }
       .about-portrait { order: -1; }
-      .portrait-frame { aspect-ratio: 4/3; }
-      .portrait-frame img { height: 100%; transform: none; }
+      .portrait-frame {
+        aspect-ratio: 3/4;
+        max-width: 320px;
+        margin: 0 auto;
+      }
+      .portrait-frame img {
+        height: 100%;
+        transform: none;
+        object-fit: contain;
+        object-position: center;
+        background: var(--warm);
+      }
 
       .visit-grid { grid-template-columns: 1fr; gap: 3rem; }
 
