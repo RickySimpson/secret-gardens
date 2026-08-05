@@ -446,32 +446,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Shimmer pass */
-    .hero-shimmer-wrap {
-      position: relative;
-      overflow: visible;
-      display: inline-block;
-    }
-    .hero-shimmer {
-      position: absolute;
-      inset: -4px -10px;
-      background: linear-gradient(105deg,
-        transparent 25%,
-        rgba(255,255,255,.45) 50%,
-        transparent 75%
-      );
-      transform: translateX(-130%);
-      pointer-events: none;
-      z-index: 10;
-      mix-blend-mode: overlay;
-    }
-    .hero-shimmer.play {
-      animation: shimmerPass .85s cubic-bezier(.4,0,.2,1) forwards;
-    }
-    @keyframes shimmerPass {
-      to { transform: translateX(130%); }
-    }
-
     /* Rule that draws in */
     .hero-rule {
       width: 0;
@@ -1347,6 +1321,10 @@
       .services-grid { grid-template-columns: 1fr; }
       .hero-cta { flex-direction: column; align-items: center; }
       .btn { width: 100%; max-width: 300px; }
+      .btn-label-sep { display: none; }
+      .btn-label-main,
+      .btn-label-phone { display: block; }
+      .btn-label-phone { margin-top: .3rem; }
     }
   </style>
 </head>
@@ -1421,15 +1399,13 @@
     <p class="hero-eyebrow">Full Service Salon · Solvang, California</p>
 
     <h1 aria-label="Secret Gardens">
-      <span class="word-mask"><span class="hero-shimmer-wrap">
+      <span class="word-mask">
         <span class="char" style="animation-delay:.55s">S</span><span class="char" style="animation-delay:.62s">e</span><span class="char" style="animation-delay:.69s">c</span><span class="char" style="animation-delay:.76s">r</span><span class="char" style="animation-delay:.83s">e</span><span class="char" style="animation-delay:.90s">t</span>
-        <div class="hero-shimmer" id="shimmer1"></div>
-      </span></span>
+      </span>
       <br>
-      <span class="word-mask"><em><span class="hero-shimmer-wrap">
+      <span class="word-mask"><em>
         <span class="char" style="animation-delay:1.05s">G</span><span class="char" style="animation-delay:1.12s">a</span><span class="char" style="animation-delay:1.19s">r</span><span class="char" style="animation-delay:1.26s">d</span><span class="char" style="animation-delay:1.33s">e</span><span class="char" style="animation-delay:1.40s">n</span><span class="char" style="animation-delay:1.47s">s</span>
-        <div class="hero-shimmer" id="shimmer2"></div>
-      </span></em></span>
+      </em></span>
     </h1>
     <div class="hero-rule" id="hero-rule"></div>
 
@@ -1440,7 +1416,7 @@
 
     <div class="hero-cta">
       <a href="tel:+18056931848" class="btn btn-primary">
-        <span class="btn-label">Call to Book &nbsp;·&nbsp; (805) 693-1848</span>
+        <span class="btn-label"><span class="btn-label-main">Call to Book</span><span class="btn-label-sep">&nbsp;·&nbsp;</span><span class="btn-label-phone">(805) 693-1848</span></span>
       </a>
       <a href="#services" class="btn btn-outline">Explore Services</a>
     </div>
@@ -1928,8 +1904,6 @@
     var cLogo   = document.getElementById('curtain-logo');
     var ghost   = document.querySelector('.hero-ghost-text');
     var rule    = document.getElementById('hero-rule');
-    var sh1     = document.getElementById('shimmer1');
-    var sh2     = document.getElementById('shimmer2');
 
     // Step 1: Show logo on curtain
     setTimeout(function() {
@@ -1958,14 +1932,6 @@
       // Show ghost text
       if (ghost) ghost.classList.add('visible');
     }, 2200);
-
-    // Step 4: Fire shimmer passes after chars land
-    setTimeout(function() {
-      if (sh1) sh1.classList.add('play');
-    }, 2050);
-    setTimeout(function() {
-      if (sh2) sh2.classList.add('play');
-    }, 2250);
   })();
 
   /* ── Init ── */
