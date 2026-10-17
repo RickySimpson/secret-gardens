@@ -65,3 +65,23 @@ replyMethod.addEventListener('change', updateReplyFields);
 form.addEventListener('reset', () => setTimeout(updateReplyFields, 0));
 updateReplyFields();
 document.querySelector('#year').textContent = new Date().getFullYear();
+
+// Leave usable guidance in place if the third-party signup never loads.
+const newsletterEmbed = document.querySelector('#newsletter-embed');
+const newsletterFallback = document.querySelector('#newsletter-fallback');
+function newsletterReady() {
+  const email = newsletterEmbed.querySelector('input[type="email"]');
+  const submit = newsletterEmbed.querySelector('button[type="submit"], input[type="submit"]');
+  return Boolean(email && submit);
+}
+if (newsletterReady()) {
+  newsletterFallback.hidden = true;
+} else {
+  const newsletterObserver = new MutationObserver(() => {
+    if (newsletterReady()) {
+      newsletterFallback.hidden = true;
+      newsletterObserver.disconnect();
+    }
+  });
+  newsletterObserver.observe(newsletterEmbed, { childList: true, subtree: true });
+}
